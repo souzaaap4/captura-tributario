@@ -1038,9 +1038,10 @@
       .price-card { padding: 28px 18px 22px; border-radius: 20px; transform: none; }
       .price-big { font-size: 3rem; }
       .price-badge { right: -10px; top: 2px; width: 28px; height: 28px; font-size: .8rem; }
-      .trust-row { grid-template-columns: 1fr; gap: 8px; }
-      .trust-item { justify-content: flex-start; }
-      .trust-item span { font-size: .78rem; }
+      .trust-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .trust-item { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+      .trust-item i { font-size: 1.1rem; }
+      .trust-item span { font-size: .68rem; line-height: 1.2; }
 
       /* FAQ */
       .faq-q { padding: 16px 14px; font-size: .88rem; }
