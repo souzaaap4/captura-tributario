@@ -1,0 +1,109 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Tributario",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [96, 112],
+      "id": "e0a87c40-9da0-4b6d-8ee4-39c17eed82f2",
+      "name": "Webhook Tributario",
+      "webhookId": "709bea99-4f21-43a3-91b1-6d858878b46b",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.body ?? $json;\nlet data = raw;\n\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch { data = {}; }\n}\nif (typeof data !== 'object' || data === null || Array.isArray(data)) {\n  data = {};\n}\n\nconst pick = (obj, keys, fallback = '') => {\n  for (const key of keys) {\n    const val = obj[key];\n    if (val !== undefined && val !== null && String(val).trim() !== '') {\n      return typeof val === 'string' ? val.trim() : String(val);\n    }\n  }\n  return fallback;\n};\n\nconst dateBR = new Date().toLocaleDateString('pt-BR', {\n  timeZone: 'America/Sao_Paulo',\n});\n\n// Campos enviados pela LP: nome, email, whatsapp, whatsapp_confirmacao, nivel_ml, regime_tributario\nconst nome            = pick(data, ['nome', 'Nome completo', 'name'], '');\nconst email           = pick(data, ['email', 'Qual seu e-mail?'], '');\nconst whatsapp        = pick(data, ['whatsapp', 'Qual o seu WhatsApp?'], '');\nconst whatsappConfirm = pick(data, ['whatsapp_confirmacao', 'Confirme seu WhatsApp'], '');\nconst medalha         = pick(data, ['nivel_ml', 'Qual é a sua medalha no Mercado Livre?'], '');\nconst regime          = pick(data, ['regime_tributario', 'Qual é o seu regime tributário atual?'], '');\n\nconst channel      = pick(data, ['channel', 'canal'], 'direto');\nconst utm_source   = pick(data, ['utm_source', 'source'], 'direto');\nconst utm_medium   = pick(data, ['utm_medium', 'medium'], 'none');\nconst utm_campaign = pick(data, ['utm_campaign', 'campaign'], 'none');\nconst utm_content  = pick(data, ['utm_content', 'content'], 'none');\nconst timestamp    = pick(data, ['timestamp'], new Date().toISOString());\n\nreturn [\n  {\n    json: {\n      'Entrada leads': dateBR,\n      'Funil': 'Tributario',\n\n      'Nome completo ': nome,\n      'Qual seu e-mail?': email,\n      'Qual o seu WhatsApp?': whatsapp,\n      'Confirme seu WhatsApp': whatsappConfirm,\n      'Qual é a sua medalha no Mercado Livre?': medalha,\n      'Qual é o seu regime tributário atual?': regime,\n\n      'channel': channel,\n      'utm_source': utm_source,\n      'utm_medium': utm_medium,\n      'utm_campaign': utm_campaign,\n      'utm_content': utm_content,\n      'timestamp': timestamp\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [336, 112],
+      "id": "7ebba0ba-f94c-4820-a283-25f05d2fc329",
+      "name": "Parse Body",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E/edit?gid=1289248792#gid=1289248792",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1289248792,
+          "mode": "list",
+          "cachedResultName": "Tributário",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E/edit#gid=1289248792"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Entrada leads":                              "={{ $json['Entrada leads'] }}",
+            "Nome completo ":                             "={{ $json['Nome completo '] }}",
+            "Qual seu e-mail?":                           "={{ $json['Qual seu e-mail?'] }}",
+            "Qual o seu WhatsApp?":                       "={{ $json['Qual o seu WhatsApp?'] }}",
+            "Confirme seu WhatsApp":                      "={{ $json['Confirme seu WhatsApp'] }}",
+            "Qual é a sua medalha no Mercado Livre?":     "={{ $json['Qual é a sua medalha no Mercado Livre?'] }}",
+            "Qual é o seu regime tributário atual?":      "={{ $json['Qual é o seu regime tributário atual?'] }}",
+            "Funil":                                      "={{ $json.Funil }}",
+            "channel":                                    "={{ $json.channel }}",
+            "utm_source":                                 "={{ $json.utm_source }}",
+            "utm_campaign":                               "={{ $json.utm_campaign }}",
+            "utm_medium":                                 "={{ $json.utm_medium }}",
+            "utm_content":                                "={{ $json.utm_content }}",
+            "timestamp":                                  "={{ $json.timestamp }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "Entrada leads",                             "displayName": "Entrada leads",                             "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Nome completo ",                            "displayName": "Nome completo ",                            "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Qual seu e-mail?",                          "displayName": "Qual seu e-mail?",                          "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Qual o seu WhatsApp?",                      "displayName": "Qual o seu WhatsApp?",                      "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Confirme seu WhatsApp",                     "displayName": "Confirme seu WhatsApp",                     "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Qual é a sua medalha no Mercado Livre?",    "displayName": "Qual é a sua medalha no Mercado Livre?",    "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Qual é o seu regime tributário atual?",     "displayName": "Qual é o seu regime tributário atual?",     "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Funil",       "displayName": "Funil",       "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "channel",     "displayName": "channel",     "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "utm_source",  "displayName": "utm_source",  "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "utm_medium",  "displayName": "utm_medium",  "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "utm_campaign","displayName": "utm_campaign","required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "utm_content", "displayName": "utm_content", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "timestamp",   "displayName": "timestamp",   "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [576, 112],
+      "id": "602b499d-6cef-4887-8aca-11af465470b1",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Tributario": {
+      "main": [[{ "node": "Parse Body",           "type": "main", "index": 0 }]]
+    },
+    "Parse Body": {
+      "main": [[{ "node": "Append row in sheet",  "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a2041f8092fce2115726eddb1e426926a5611d3381df73a6f0a4d6fdebec6e0b"
+  }
+}
