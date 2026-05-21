@@ -1019,6 +1019,83 @@ Os UTMs são capturados no carregamento da página e incluídos no payload via s
 https://tributario.metodop4.com.br/?utm_source=instagram&utm_medium=stories&utm_campaign=lancamento-maio&utm_content=cta-verde&channel=social
 ```
 
+### v2.25 — Organização de Arquivos + Repositório GitHub (2026-05-21)
+
+#### Solicitações atendidas
+- [x] Organizar arquivos do projeto
+- [x] Criar `.gitignore`
+- [x] Inicializar repositório Git
+- [x] Subir tudo para o GitHub
+
+#### Repositório
+**URL:** https://github.com/taysouzaa/captura-tributario  
+**Branch principal:** `main`  
+**Commit inicial:** `feat: landing page completa — Tributário para Marketplaces (Método P4)`
+
+#### Estrutura final do projeto
+
+```
+captura-tributario/
+│
+├── index.html                        → LP principal (HTML + CSS + JS — arquivo único)
+├── n8n-workflow-tributario.json      → Workflow n8n (Webhook → Parse → Google Sheets)
+├── DOCUMENTACAO.md                   → Documentação técnica completa
+├── .gitignore                        → Exclui Sora.zip, .DS_Store, editores
+├── LICENSE                           → Licença (do repositório remoto)
+├── README.md                         → README (do repositório remoto)
+│
+├── assets/
+│   ├── 01 (1).png                    → Logo Método P4 (navbar + favicon)
+│   ├── 03.png                        → Logo Método P4 (footer)
+│   ├── lp-tributario.png             → Foto do hero (background)
+│   ├── lojista-tributario.png        → Foto da seção "Feito de Lojista para Lojista"
+│   ├── 1ec33064-...png               → Foto de fundo da seção do instrutor
+│   ├── 6c9bae32-...png               → Capa do vídeo (thumbnail)
+│   ├── 3.svg                         → Paleta de cores da marca
+│   ├── meli.png                      → Logo Mercado Livre
+│   ├── shopee.png                    → Logo Shopee
+│   ├── amazon.png                    → Logo Amazon
+│   ├── magalu.png                    → Logo Magalu
+│   ├── shein.png                     → Logo Shein
+│   └── tiktok.png                    → Logo TikTok
+│
+├── depoimentos/
+│   ├── 1.webp … 5.webp               → Prints reais de depoimentos (carrossel)
+│
+└── fonts/
+    ├── OFL.txt                       → Licença da fonte Sora
+    ├── README.txt                    → Info da fonte
+    ├── Sora-VariableFont_wght.ttf    → Fonte variável (referência)
+    └── static/
+        ├── Sora-Light.ttf            (weight 300)
+        ├── Sora-Regular.ttf          (weight 400)
+        ├── Sora-Medium.ttf           (weight 500)
+        ├── Sora-SemiBold.ttf         (weight 600)
+        ├── Sora-Bold.ttf             (weight 700)
+        ├── Sora-ExtraBold.ttf        (weight 800)
+        ├── Sora-ExtraLight.ttf       (weight 200)
+        └── Sora-Thin.ttf             (weight 100)
+```
+
+#### O que foi excluído do repositório (`.gitignore`)
+- `Sora.zip` — arquivo zip redundante (fontes já extraídas em `fonts/static/`)
+- `.DS_Store`, `Thumbs.db`, `desktop.ini` — arquivos de sistema
+- `.vscode/`, `.idea/`, `*.swp` — arquivos de editores
+
+#### Como clonar e rodar localmente
+```bash
+git clone https://github.com/taysouzaa/captura-tributario.git
+cd captura-tributario
+# Abrir index.html no browser ou servir com live-server
+```
+
+#### Como atualizar o repositório após mudanças
+```bash
+git add .
+git commit -m "descrição da mudança"
+git push
+```
+
 ---
 
 *Documentação atualizada em 21/05/2026 — Método P4*
