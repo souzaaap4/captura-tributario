@@ -1096,6 +1096,37 @@ git commit -m "descrição da mudança"
 git push
 ```
 
+### v2.26 — Correção Mobile: Selos de Confiança (2026-05-21)
+
+#### Solicitação atendida
+- [x] Corrigir visual dos selos "Compra Segura / Satisfação Garantida / Privacidade Protegida" no mobile
+
+#### Problema
+No breakpoint `≤ 480px`, o `.trust-row` estava com `grid-template-columns: 1fr`, empilhando os 3 selos verticalmente em uma única coluna — resultado feio e desequilibrado visualmente.
+
+#### Alterações exatas realizadas (`index.html`)
+```css
+/* ANTES */
+.trust-row { grid-template-columns: 1fr; gap: 8px; }
+.trust-item { justify-content: flex-start; }
+.trust-item span { font-size: .78rem; }
+
+/* DEPOIS */
+.trust-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.trust-item { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+.trust-item i { font-size: 1.1rem; }
+.trust-item span { font-size: .68rem; line-height: 1.2; }
+```
+
+#### Resultado
+- Os 3 selos ficam lado a lado em colunas iguais
+- Ícone centralizado acima do texto
+- Texto menor e compacto para caber em telas pequenas
+
+#### GitHub
+- Commit: `fix(mobile): selos de confiança em 3 colunas no mobile`
+- Branch: `main` — [github.com/taysouzaa/captura-tributario](https://github.com/taysouzaa/captura-tributario)
+
 ---
 
 *Documentação atualizada em 21/05/2026 — Método P4*
