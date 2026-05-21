@@ -1439,13 +1439,13 @@
 
         <div class="fld">
           <label class="fld-label" for="f-wpp">Qual o seu Whatsapp? <span class="req">*</span></label>
-          <input class="fld-input" type="tel" id="f-wpp" name="whatsapp" placeholder="Ex: 55 11 987654321" autocomplete="tel" inputmode="numeric" required>
+          <input class="fld-input" type="tel" id="f-wpp" name="whatsapp" placeholder="Ex: 19 987654321" autocomplete="tel" inputmode="numeric" required>
           <span class="fld-err" id="err-wpp"><i class="fas fa-exclamation-circle"></i> Por favor, informe um WhatsApp válido.</span>
         </div>
 
         <div class="fld">
           <label class="fld-label" for="f-wpp2">Confirme seu Whatsapp <span class="req">*</span></label>
-          <input class="fld-input" type="tel" id="f-wpp2" name="whatsapp_confirmacao" placeholder="Ex: 55 11 987654321" autocomplete="tel" inputmode="numeric" required>
+          <input class="fld-input" type="tel" id="f-wpp2" name="whatsapp_confirmacao" placeholder="Ex: 19 987654321" autocomplete="tel" inputmode="numeric" required>
           <span class="fld-err" id="err-wpp2"><i class="fas fa-exclamation-circle"></i> Os números de WhatsApp não coincidem.</span>
         </div>
 
@@ -1566,10 +1566,9 @@
   const WEBHOOK_URL = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
 
   function maskPhone(input) {
-    const d = input.value.replace(/\D/g, '').slice(0, 13);
+    const d = input.value.replace(/\D/g, '').slice(0, 11);
     let v = d;
-    if (d.length > 4) v = d.slice(0,2) + ' ' + d.slice(2,4) + ' ' + d.slice(4);
-    else if (d.length > 2) v = d.slice(0,2) + ' ' + d.slice(2);
+    if (d.length > 2) v = d.slice(0,2) + ' ' + d.slice(2);
     input.value = v;
   }
   function phoneKeydown(e) {
@@ -1602,8 +1601,8 @@
     const wpp2  = document.getElementById('f-wpp2').value.replace(/\D/g,'');
     const email = document.getElementById('f-email').value.trim();
     if (nome.length < 3) { showErr('f-nome','err-nome',true); ok = false; } else showErr('f-nome','err-nome',false);
-    if (wpp.length < 13) { showErr('f-wpp','err-wpp',true); ok = false; } else showErr('f-wpp','err-wpp',false);
-    if (wpp2.length < 13 || wpp !== wpp2) { showErr('f-wpp2','err-wpp2',true); ok = false; } else showErr('f-wpp2','err-wpp2',false);
+    if (wpp.length < 10) { showErr('f-wpp','err-wpp',true); ok = false; } else showErr('f-wpp','err-wpp',false);
+    if (wpp2.length < 10 || wpp !== wpp2) { showErr('f-wpp2','err-wpp2',true); ok = false; } else showErr('f-wpp2','err-wpp2',false);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('f-email','err-email',true); ok = false; } else showErr('f-email','err-email',false);
     return ok;
   }
