@@ -14,7 +14,8 @@
 7. [Componentes Interativos](#7-componentes-interativos)
 8. [Responsividade](#8-responsividade)
 9. [Acessibilidade](#9-acessibilidade)
-10. [Changelog — Histórico de Alterações](#10-changelog--histórico-de-alterações)
+10. [SEO e Dados Estruturados](#10-seo-e-dados-estruturados)
+11. [Changelog — Histórico de Alterações](#11-changelog--histórico-de-alterações)
 
 ---
 
@@ -157,7 +158,8 @@ background: linear-gradient(135deg, #82E57D, #56D44F);
 ### 5.6 — Como Funcionam as Aulas? (Section dark)
 
 - **Layout:** Grid 2 colunas — features à esquerda, player à direita
-- **Vídeo:** Embed Vimeo `800389026` responsivo (aspect ratio 16:9 via `padding-top: 56.25%`)
+- **Vídeo:** Player HTML5 nativo (`<video>`) com arquivo local `assets/video-aula.mp4` — aspect ratio 16:9 via `padding-top: 56.25%`
+- **Thumbnail:** atributo `poster="assets/6c9bae32-d7b5-4352-9dbc-603d1d855d01.png"` nativo do browser
 - **Efeito:** Glow verde sutil ao redor do player
 - **Features listadas:**
   - Videoaulas gravadas — assista no seu ritmo
@@ -232,7 +234,9 @@ Não sei            (valor: nao_sei)
 
 ### Validações implementadas
 
-- **WhatsApp:** Máscara automática `(XX) XXXXX-XXXX`
+- **WhatsApp:** Máscara automática `DD DDDDDDDDD` — formato sem código do país (ex: `19 987654321`)
+- **Mínimo aceito:** 10 dígitos (cobre fixo 10 dígitos e celular 11 dígitos)
+- **Placeholder:** `Ex: 19 987654321`
 - **Confirmação de WhatsApp:** Validação em tempo real — erro visual se os números não baterem
 - **HTML5 `required`** em todos os campos
 - **`novalidate`** no `<form>` para controle customizado da UX
@@ -328,7 +332,86 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
 
 ---
 
-## 10. Changelog — Histórico de Alterações
+## 10. SEO e Dados Estruturados
+
+### Meta tags implementadas
+
+| Tag | Valor |
+|-----|-------|
+| `<title>` | Tributário para Marketplaces — Curso Gratuito \| Método P4 |
+| `<meta description>` | Aprenda tributação para marketplaces gratuitamente... |
+| `<link rel="canonical">` | `https://tributario.metodop4.com.br/` |
+| `<meta name="robots">` | `index, follow` |
+| `<meta name="author">` | Método P4 |
+| `lang="pt-BR"` | No elemento `<html>` |
+
+### Open Graph (Facebook / WhatsApp / LinkedIn)
+
+```html
+<meta property="og:type"        content="website">
+<meta property="og:url"         content="https://tributario.metodop4.com.br/">
+<meta property="og:title"       content="...">
+<meta property="og:description" content="...">
+<meta property="og:image"       content="...">  <!-- 1200×630 -->
+<meta property="og:locale"      content="pt_BR">
+<meta property="og:site_name"   content="Método P4">
+```
+
+### Twitter Card
+
+```html
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="...">
+<meta name="twitter:description" content="...">
+<meta name="twitter:image"       content="...">
+```
+
+### JSON-LD — Dado Estruturado
+
+**Tipo:** `Course` (Schema.org)
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "Tributário para Marketplaces",
+  "description": "Curso gratuito sobre tributação para vendedores em marketplaces...",
+  "provider": {
+    "@type": "Organization",
+    "name": "Método P4",
+    "url": "https://tributario.metodop4.com.br/",
+    "logo": "https://tributario.metodop4.com.br/assets/01%20(1).png",
+    "sameAs": [
+      "https://www.instagram.com/metodop4/",
+      "https://www.linkedin.com/company/m%C3%A9todo-p4/",
+      "https://www.youtube.com/@gabriel_pim"
+    ]
+  },
+  "instructor": {
+    "@type": "Person",
+    "name": "Gabriel Pim",
+    "jobTitle": "Especialista em E-commerce e Tributação para Marketplaces"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL",
+    "availability": "https://schema.org/InStock",
+    "category": "Free"
+  },
+  "educationalLevel": "Beginner",
+  "inLanguage": "pt-BR",
+  "url": "https://tributario.metodop4.com.br/"
+}
+```
+
+**O que esse dado estruturado faz:** permite ao Google exibir o curso em resultados enriquecidos (rich results) de busca — incluindo nome, instrutor, preço e disponibilidade diretamente na SERP.
+
+**Sugestão futura:** adicionar `FAQPage` para a seção de perguntas frequentes — amplia a presença no Google com accordion de respostas diretamente nos resultados.
+
+---
+
+## 11. Changelog — Histórico de Alterações
 
 ### v2.0 — Refatoração completa (2025-05)
 
@@ -1126,6 +1209,63 @@ No breakpoint `≤ 480px`, o `.trust-row` estava com `grid-template-columns: 1fr
 #### GitHub
 - Commit: `fix(mobile): selos de confiança em 3 colunas no mobile`
 - Branch: `main` — [github.com/taysouzaa/captura-tributario](https://github.com/taysouzaa/captura-tributario)
+
+### v2.27 — Correção da Máscara e Validação de Telefone (2026-05-21)
+
+#### Solicitação atendida
+- [x] Corrigir validação que rejeitava números válidos de 11 dígitos (sem código do país)
+
+#### Problema
+A máscara e validação esperavam 13 dígitos no formato `55 11 987654321` (com prefixo do país). Usuários digitando apenas `19 987654321` (11 dígitos, sem `55`) recebiam o erro "Por favor, informe um WhatsApp válido."
+
+#### Alterações exatas realizadas (`index.html`)
+
+| Item | Antes | Depois |
+|------|-------|--------|
+| `slice` da máscara | `slice(0, 13)` | `slice(0, 11)` |
+| Formato da máscara | `DD DD DDDDDDDDD` (3 grupos) | `DD DDDDDDDDD` (2 grupos) |
+| Validação mínima | `wpp.length < 13` | `wpp.length < 10` |
+| Placeholder | `Ex: 55 11 987654321` | `Ex: 19 987654321` |
+
+#### Resultado
+- Números no formato `DD DDDDDDDDD` (celular, 11 dígitos) aceitos normalmente
+- Números fixos (`DD DDDDDDDD`, 10 dígitos) também aceitos
+- Placeholder atualizado para refletir o formato esperado
+
+---
+
+### v2.28 — Substituição do Vídeo Vimeo por Arquivo MP4 Local (2026-05-21)
+
+#### Solicitação atendida
+- [x] Substituir embed Vimeo por vídeo local `assets/video-aula.mp4`
+
+#### Problema
+O embed Vimeo (`video/800389026`) não carregava — o vídeo estava inacessível ou com restrição de domínio no Vimeo.
+
+#### Arquivo adicionado
+- `assets/video-aula.mp4` (32,4 MB) — copiado de `aula_8_-_comparativo_lucro_real_e_presumido_v1 (1080p).mp4`
+
+#### Evolução das tentativas
+
+| Tentativa | Abordagem | Resultado |
+|-----------|-----------|-----------|
+| 1ª | Adicionado `allowfullscreen` ao iframe Vimeo | Sem efeito — problema no Vimeo |
+| 2ª | `<video>` com `display:none` + JS toggling via opacity | Som funcionava, vídeo invisível |
+| 3ª | `<video>` com `display:none` → `display:block` via classe | Som funcionava, vídeo invisível |
+| 4ª | `<video>` sempre visível com cover overlay via z-index | Som funcionava, vídeo invisível |
+| **Final** | Player HTML5 nativo simples com `poster` e `controls` | **Funcionando** |
+
+#### Alterações finais realizadas (`index.html`)
+- Removido: `<iframe>` Vimeo + `<button class="video-cover">` + JS do `VIDEO COVER`
+- Adicionado: `<video src="assets/video-aula.mp4" controls playsinline preload="metadata" poster="assets/6c9bae32-...png">`
+- CSS: simplificado — `<video>` ocupa `position: absolute; inset: 0; width/height: 100%` sem lógica de visibilidade
+- JS: bloco `VIDEO COVER` removido por completo
+
+#### Estrutura de arquivos atualizada
+```
+assets/
+└── video-aula.mp4    → aula demonstrativa (Lucro Real vs Lucro Presumido, 1080p, 32,4 MB)
+```
 
 ---
 
