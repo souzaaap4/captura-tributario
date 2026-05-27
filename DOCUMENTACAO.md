@@ -21,10 +21,10 @@
 
 ## 1. Visão Geral do Projeto
 
-**Objetivo:** Landing page de captação de leads para o curso gratuito "Tributário para Marketplaces" do Método P4.
+**Objetivo:** Landing page de captação de leads para o curso "Tributário para Marketplaces" do Método P4.
 
 **Instrutor:** Gabriel Pim  
-**Produto:** Curso 100% gratuito sobre tributação para vendedores em marketplaces (Mercado Livre, Shopee, Amazon).  
+**Produto:** Curso completo sobre tributação para vendedores em marketplaces (Mercado Livre, Shopee, Amazon).  
 **Conversão desejada:** Inscrição via formulário modal — leads enviados para automação externa.
 
 **Arquivo principal:** `index.html`  
@@ -123,10 +123,10 @@ background: linear-gradient(135deg, #82E57D, #56D44F);
 - **Altura:** `min-height: 100vh` — ocupa toda a tela inicial
 - **Background:** Dot-grid com máscara radial + 3 orbs de luz animados (verde, azul, verde escuro)
 - **Elementos:**
-  - Badge pill pulsante "Curso 100% Gratuito"
+  - Badge pill pulsante "Curso Completo"
   - H1 com highlight em gradiente verde
   - Subtítulo explicativo
-  - Chip de preço: `R$97,00` riscado → `R$0,00` em verde
+  - Chip de preço com destaque para `R$97,00`
   - CTA primário com ícone de seta animado
   - Trust bar com 3 ícones (acesso imediato, sem cartão, certificado)
 
@@ -134,7 +134,7 @@ background: linear-gradient(135deg, #82E57D, #56D44F);
 
 - **Comportamento:** Scroll infinito animado via CSS (`@keyframes ticker`)
 - **Pausa ao hover**
-- **Dados:** +2.400 alunos, 6 módulos, 100% gratuito, R$0, Vitalício, +500 mentorados, 5★
+- **Dados:** +2.400 alunos, 6 módulos, conteúdo atualizado, R$97, Vitalício, +500 mentorados, 5★
 
 ### 5.4 — Problemas (Section dark)
 
@@ -183,7 +183,7 @@ background: linear-gradient(135deg, #82E57D, #56D44F);
 ### 5.9 — CTA / Pricing
 
 - **Foco:** Conversão final — destaque total no formulário
-- **Price box:** "Era R$97,00 → Hoje é R$0,00" em verde
+- **Price box:** "Investimento: R$97,00" em verde
 - **Checklist:** 5 benefícios com ícone check verde
 - **Urgência:** "Vagas limitadas para manter a qualidade do suporte"
 
@@ -338,8 +338,8 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
 
 | Tag | Valor |
 |-----|-------|
-| `<title>` | Tributário para Marketplaces — Curso Gratuito \| Método P4 |
-| `<meta description>` | Aprenda tributação para marketplaces gratuitamente... |
+| `<title>` | Tributário para Marketplaces — Curso Completo \| Método P4 |
+| `<meta description>` | Aprenda tributação para marketplaces. Simples Nacional, ICMS-ST, Lucro Real e muito mais... |
 | `<link rel="canonical">` | `https://tributario.metodop4.com.br/` |
 | `<meta name="robots">` | `index, follow` |
 | `<meta name="author">` | Método P4 |
@@ -375,7 +375,7 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
   "@context": "https://schema.org",
   "@type": "Course",
   "name": "Tributário para Marketplaces",
-  "description": "Curso gratuito sobre tributação para vendedores em marketplaces...",
+  "description": "Curso sobre tributação para vendedores em marketplaces...",
   "provider": {
     "@type": "Organization",
     "name": "Método P4",
@@ -392,20 +392,13 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
     "name": "Gabriel Pim",
     "jobTitle": "Especialista em E-commerce e Tributação para Marketplaces"
   },
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "BRL",
-    "availability": "https://schema.org/InStock",
-    "category": "Free"
-  },
   "educationalLevel": "Beginner",
   "inLanguage": "pt-BR",
   "url": "https://tributario.metodop4.com.br/"
 }
 ```
 
-**O que esse dado estruturado faz:** permite ao Google exibir o curso em resultados enriquecidos (rich results) de busca — incluindo nome, instrutor, preço e disponibilidade diretamente na SERP.
+**O que esse dado estruturado faz:** permite ao Google exibir o curso em resultados enriquecidos (rich results) de busca — incluindo nome, instrutor e disponibilidade diretamente na SERP.
 
 **Sugestão futura:** adicionar `FAQPage` para a seção de perguntas frequentes — amplia a presença no Google com accordion de respostas diretamente nos resultados.
 
@@ -580,7 +573,7 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
   - visual refeito para referência de oferta com:
     - “De: R$97,00” em destaque laranja com risco forte
     - “por” em destaque intermediário
-    - valor `R$0,00` com peso máximo
+    - valor `R$97,00` com peso máximo
     - selo de destaque lateral (`.price-badge`) em formato burst
   - CTA principal em formato pill e largura total do card
   - selos de confiança reestruturados com ícone + texto:
@@ -593,7 +586,7 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
 
 #### Resultado esperado
 - Seção de conteúdo com leitura mais clara e percepção de organização superior.
-- Card de preço com hierarquia de conversão mais forte (ancoragem de preço e foco no “R$0,00”).
+- Card de preço com hierarquia de conversão mais forte (foco no valor “R$97,00”).
 - Melhor consistência visual com o restante da landing em desktop e mobile.
 
 ### v2.6 — Simplificação de Cards + Evidência Máxima no Card de Valor (2026-05-21)
@@ -610,9 +603,9 @@ const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/SEU_ID/';
 - Card de valor:
   - `reveal d2` recebeu classe `price-col` para tratamento dedicado
   - `.price-card` ganhou borda verde mais forte, escala (`transform: scale(1.05)` em desktop) e sombra mais profunda
-  - adição de selo superior “100% Gratuito” (`.price-tag`)
+  - adição de selo superior “Curso Completo” (`.price-tag`)
   - reforço de brilho interno com `::before` e `::after` para destacar o bloco sem poluir o layout
-  - valor `R$0,00` ampliado para maior impacto visual
+  - valor `R$97,00` ampliado para maior impacto visual
 - Responsivo:
   - em `<= 900px`, `<= 768px` e `<= 480px` a escala do card volta para `none` para evitar quebra
 
@@ -1269,4 +1262,51 @@ assets/
 
 ---
 
-*Documentação atualizada em 21/05/2026 — Método P4*
+### v2.29 — Registro Separado da Sessão (2026-05-22)
+
+#### Solicitações atendidas hoje
+- [x] Remover da landing e da documentação menções a "grátis/gratuito/free"
+- [x] Ajustar card de preço para "De: R$197,00" e "por R$97,00"
+- [x] Redirecionar para checkout após envio do formulário
+- [x] Orientar automação n8n para registrar o lead em duas planilhas
+- [x] Gerar pacote isolado para HostGator com nomes prefixados em `tributario-tay`
+
+#### Alterações realizadas (`index.html`)
+- Copy revisada para remover referência de gratuidade em:
+  - `<title>`, meta descriptions (SEO/OG/Twitter)
+  - texto do hero badge
+  - FAQ relacionada a gratuidade
+  - mensagem pré-preenchida do botão WhatsApp
+  - textos do modal de inscrição
+- JSON-LD ajustado:
+  - removido bloco `offers` com `price: "0"` e `category: "Free"`
+  - descrição do curso ajustada para versão sem "gratuito"
+- Card de preço ajustado para:
+  - `De: R$197,00` (riscado)
+  - `por R$97,00`
+- Pós-formulário:
+  - adicionado `CHECKOUT_URL` com o link de compra
+  - adicionado `window.location.assign(CHECKOUT_URL)` após exibir sucesso
+
+#### Alterações realizadas (`DOCUMENTACAO.md`)
+- Conteúdo técnico alinhado com a remoção de linguagem de gratuidade
+- Campos de SEO e exemplos de JSON-LD atualizados para refletir o estado atual da LP
+- Registros de preço ajustados para foco em `R$97,00` quando aplicável
+
+#### Entregáveis para deploy (HostGator)
+- Pacote padrão:
+  - pasta `hostgator_upload_20260522/`
+  - arquivo `hostgator_upload_20260522.zip`
+- Pacote isolado com prefixo anti-conflito:
+  - pasta `hostgator_upload_tributario_tay/`
+  - arquivo `hostgator_upload_tributario_tay.zip`
+  - página principal: `tributario-tay.html`
+  - assets: `tributario-tay-assets/`, `tributario-tay-depoimentos/`, `tributario-tay-fonts/`
+
+#### Observação de automação (n8n)
+- Fluxo mantido em `Webhook Tributario -> Parse Body`
+- Para gravar em 2 planilhas: duplicar node Google Sheets `append` e conectar ambos na saída do `Parse Body` (execução em paralelo)
+
+---
+
+*Documentação atualizada em 22/05/2026 — Método P4*
