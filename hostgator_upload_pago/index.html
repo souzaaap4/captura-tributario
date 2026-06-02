@@ -1,7 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P35RFKZK');</script>
+<!-- End Google Tag Manager -->
   <meta charset="UTF-8">
+  <link rel="preload" as="image" type="image/webp" href="tributario-tay-assets/lp-tributario.webp" fetchpriority="high">
+  <script>
+    (function captureAndCleanTracking() {
+      var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','channel','canal'];
+      var initialUrl = window.location.href;
+      var p = new URLSearchParams(window.location.search);
+      window.__leadTracking = {
+        channel: p.get('channel') || p.get('canal') || '',
+        utm_source: p.get('utm_source') || '',
+        utm_medium: p.get('utm_medium') || '',
+        utm_campaign: p.get('utm_campaign') || '',
+        utm_content: p.get('utm_content') || '',
+        utm_term: p.get('utm_term') || '',
+        referrer: document.referrer || '',
+        page_url: initialUrl,
+        timestamp: new Date().toISOString()
+      };
+      if (!keys.some(function(k){ return p.has(k); })) return;
+      var c = new URLSearchParams(p);
+      keys.forEach(function(k){ c.delete(k); });
+      var q = c.toString();
+      window.history.replaceState({}, '', window.location.pathname + (q ? '?' + q : '') + window.location.hash);
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tributário para Marketplaces — Curso Completo | Método P4</title>
   <meta name="description" content="Aprenda tributação para marketplaces. Simples Nacional, ICMS-ST, Lucro Real e muito mais. Curso completo do Método P4.">
@@ -185,7 +216,7 @@
       background-color: var(--dark);
       background-image:
         linear-gradient(94deg, rgba(7,14,26,.78) 0%, rgba(7,14,26,.68) 34%, rgba(7,14,26,.48) 58%, rgba(7,14,26,.22) 100%),
-        url('tributario-tay-assets/lp-tributario.png');
+        url('tributario-tay-assets/lp-tributario.webp');
       background-size: cover;
       background-position: 84% center;
       background-repeat: no-repeat;
@@ -317,7 +348,7 @@
       background-image:
         linear-gradient(160deg, rgba(9,18,31,.2) 6%, rgba(9,18,31,.52) 100%),
         radial-gradient(circle at 68% 10%, rgba(163,255,0,.38) 0%, rgba(163,255,0,0) 48%),
-        url('tributario-tay-assets/lojista-tributario.png');
+        url('tributario-tay-assets/lojista-tributario.webp');
       background-size: cover;
       background-position: center;
       border: 1px solid rgba(255,255,255,.2);
@@ -746,7 +777,7 @@
     .instrutor-sec {
       background-image:
         linear-gradient(96deg, rgba(7,14,26,.58) 0%, rgba(7,14,26,.46) 34%, rgba(7,14,26,.16) 54%, rgba(7,14,26,.02) 100%),
-        url('tributario-tay-assets/1ec33064-2c8b-440d-8100-d32fc455a038.png');
+        url('tributario-tay-assets/bg-section3.webp');
       background-size: cover;
       background-position: 260% 40%;
       background-repeat: no-repeat;
@@ -1067,13 +1098,17 @@
   </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P35RFKZK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ═══ NAV ═══ -->
 <nav class="nav" id="mainNav">
   <div class="wrap">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo" aria-label="Método P4">
-        <img class="brand-icon" src="tributario-tay-assets/01%20(1).png" alt="Método P4">
+        <img class="brand-icon" src="tributario-tay-assets/01%20(1).png" alt="Método P4" decoding="async">
       </a>
       <div style="display:flex;align-items:center;gap:16px;">
         <button class="nav-cta" onclick="openModal(event)">Quero aprender agora!</button>
@@ -1155,8 +1190,8 @@
         src="tributario-tay-assets/video-aula.mp4"
         controls
         playsinline
-        preload="metadata"
-        poster="tributario-tay-assets/6c9bae32-d7b5-4352-9dbc-603d1d855d01.png"
+        preload="none"
+        poster="tributario-tay-assets/poster-aula.webp"
         title="Como funcionam as aulas — Tributário para Marketplaces">
       </video>
     </div>
@@ -1375,7 +1410,7 @@
       <div class="footer-top">
         <div class="foot-brand">
           <div class="foot-logo">
-            <img class="brand-icon" src="tributario-tay-assets/03.png" alt="Método P4">
+            <img class="brand-icon" src="tributario-tay-assets/03.png" alt="Método P4" loading="lazy" decoding="async">
           </div>
           <p class="foot-tag">Tributário para Marketplaces</p>
           <div class="foot-social" aria-label="Redes sociais">
@@ -1529,13 +1564,13 @@
 
   // ── UTM CAPTURE ──
   const _utms = (() => {
-    const initialUrl = window.location.href;
+    const initialUrl = (window.__leadTracking && window.__leadTracking.page_url) || window.location.href;
     const p = new URLSearchParams(window.location.search);
     const getParam = (key) => {
       const val = p.get(key);
       return val && val.trim() ? val.trim() : '';
     };
-    const trackedKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'channel', 'canal'];
+    const trackedKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'channel', 'canal'];
     const hasTrackingParam = trackedKeys.some((key) => getParam(key));
 
     // Keep UTMs for tracking, but remove them from the visible URL.
@@ -1553,6 +1588,7 @@
       utm_medium:   getParam('utm_medium'),
       utm_campaign: getParam('utm_campaign'),
       utm_content:  getParam('utm_content'),
+      utm_term:     getParam('utm_term'),
       referrer:     document.referrer || '',
       page_url:     initialUrl,
       timestamp:    new Date().toISOString(),
@@ -1560,7 +1596,8 @@
   })();
 
   // ── FORM ──
-  const WEBHOOK_URL = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
+  const WEBHOOK_URL  = 'https://ecomidia-n8n.misrsj.easypanel.host/webhook/p4-consultoria';
+  const WEBHOOK_URL2 = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
   const CHECKOUT_URL = 'https://payfast.greenn.com.br/9ypndtq/offer/BccCaP?b_id_1=uwuqt83&b_offer_1=RmOKr1';
 
   function maskPhone(input) {
@@ -1613,10 +1650,28 @@
       regime_tributario:     document.getElementById('f-regime').value,
       ..._utms,
     };
-    try { if (WEBHOOK_URL) await fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) }); } catch(_) {}
+    var qualified = payload.nivel_ml !== 'sem_medalha' && payload.regime_tributario !== 'mei';
+    var mqlTag    = qualified ? 'qualified_lead' : 'lead_disqualified';
+    const bodyNew = JSON.stringify({ evento: 'form_submit', projeto: 'lead-tributario', mql: mqlTag, ...payload });
+    const bodyOld = JSON.stringify(payload);
     document.getElementById('formState').style.display = 'none';
     const s = document.getElementById('successState'); s.style.display = 'block'; s.focus();
-    setTimeout(() => { window.location.assign(CHECKOUT_URL); }, 1000);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: mqlTag,
+      lead_nome: payload.nome,
+      lead_email: payload.email,
+      lead_whatsapp: payload.whatsapp,
+      browser_user_agent: navigator.userAgent,
+      browser_language: navigator.language,
+      browser_platform: navigator.platform,
+      screen_resolution: screen.width + 'x' + screen.height,
+      viewport: window.innerWidth + 'x' + window.innerHeight,
+      eventCallback: function() { window.location.assign(CHECKOUT_URL); },
+      eventTimeout: 2000,
+    });
+    if (WEBHOOK_URL)  fetch(WEBHOOK_URL,  { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyNew,  keepalive: true }).catch(function() {});
+    if (WEBHOOK_URL2) fetch(WEBHOOK_URL2, { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyOld, keepalive: true }).catch(function() {});
   }
 
   ['f-nome','f-wpp','f-wpp2','f-email'].forEach(id => {

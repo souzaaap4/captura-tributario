@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P35RFKZK');</script>
+<!-- End Google Tag Manager -->
   <meta charset="UTF-8">
+  <link rel="preload" as="image" type="image/webp" href="assets/lp-tributario.webp" fetchpriority="high">
   <script>
     (function captureAndCleanTracking() {
-      var keys = ['utm_source','utm_medium','utm_campaign','utm_content','channel','canal'];
+      var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','channel','canal'];
       var initialUrl = window.location.href;
       var p = new URLSearchParams(window.location.search);
       window.__leadTracking = {
@@ -13,6 +21,7 @@
         utm_medium: p.get('utm_medium') || '',
         utm_campaign: p.get('utm_campaign') || '',
         utm_content: p.get('utm_content') || '',
+        utm_term: p.get('utm_term') || '',
         referrer: document.referrer || '',
         page_url: initialUrl,
         timestamp: new Date().toISOString()
@@ -206,10 +215,10 @@
     .hero {
       background-color: var(--dark);
       background-image:
-        linear-gradient(94deg, rgba(7,14,26,.78) 0%, rgba(7,14,26,.68) 34%, rgba(7,14,26,.48) 58%, rgba(7,14,26,.22) 100%),
-        url('assets/lp-tributario.png');
+        linear-gradient(94deg, rgba(7,14,26,.88) 0%, rgba(7,14,26,.78) 38%, rgba(7,14,26,.52) 62%, rgba(7,14,26,.10) 100%),
+        url('assets/lp-tributario.webp');
       background-size: cover;
-      background-position: 84% center;
+      background-position: right center;
       background-repeat: no-repeat;
       min-height: 100vh;
       display: flex; align-items: center;
@@ -339,7 +348,7 @@
       background-image:
         linear-gradient(160deg, rgba(9,18,31,.2) 6%, rgba(9,18,31,.52) 100%),
         radial-gradient(circle at 68% 10%, rgba(163,255,0,.38) 0%, rgba(163,255,0,0) 48%),
-        url('assets/lojista-tributario.png');
+        url('assets/lojista-tributario.webp');
       background-size: cover;
       background-position: center;
       border: 1px solid rgba(255,255,255,.2);
@@ -458,7 +467,7 @@
       display: flex; flex-direction: column; align-items: center;
       text-align: center; gap: 18px;
       box-shadow: 0 34px 62px rgba(5,10,18,.42), 0 0 0 8px rgba(88,222,86,.08);
-      position: relative; overflow: hidden;
+      position: relative;
       transform: scale(1.05);
       z-index: 2;
     }
@@ -504,7 +513,7 @@
     .price-badge {
       position: absolute;
       top: 6px;
-      right: -24px;
+      right: -42px;
       width: 34px;
       height: 34px;
       display: inline-flex;
@@ -768,7 +777,7 @@
     .instrutor-sec {
       background-image:
         linear-gradient(96deg, rgba(7,14,26,.58) 0%, rgba(7,14,26,.46) 34%, rgba(7,14,26,.16) 54%, rgba(7,14,26,.02) 100%),
-        url('assets/1ec33064-2c8b-440d-8100-d32fc455a038.png');
+        url('assets/bg-section3.webp');
       background-size: cover;
       background-position: 260% 40%;
       background-repeat: no-repeat;
@@ -939,7 +948,7 @@
       }
       /* Hero */
       .hero-grid { grid-template-columns: 1fr; text-align: left; justify-items: start; }
-      .hero { padding: 110px 0 78px; background-position: 80% center; }
+      .hero { padding: 110px 0 78px; background-position: right center; }
       .hero .wrap { padding: 0 24px; }
       .hero .reveal { margin: 0; padding: 0; }
       .hero h1 { max-width: 13ch; }
@@ -979,7 +988,7 @@
       .hero .btn-green-lg { width: auto; }
 
       /* Hero */
-      .hero { background-position: 76% center; }
+      .hero { background-position: right center; }
       .hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.4rem); }
       .hero-sub { font-size: .92rem; max-width: 100%; }
 
@@ -1036,7 +1045,7 @@
       }
 
       /* Hero */
-      .hero { padding: 98px 0 66px; background-position: 72% center; }
+      .hero { padding: 98px 0 66px; background-position: right 30%; }
       .hero h1 { font-size: clamp(1.6rem, 5vw, 1.9rem); }
       .hero-sub { font-size: .88rem; }
       .hero .reveal { padding: 0; border-radius: 0; }
@@ -1055,7 +1064,7 @@
       /* Conteúdo / Preço */
       .price-card { padding: 28px 18px 22px; border-radius: 20px; transform: none; }
       .price-big { font-size: 3rem; }
-      .price-badge { right: -10px; top: 2px; width: 28px; height: 28px; font-size: .8rem; }
+      .price-badge { right: -34px; top: 2px; width: 28px; height: 28px; font-size: .8rem; }
       .trust-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
       .trust-item { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; }
       .trust-item i { font-size: 1.1rem; }
@@ -1089,13 +1098,17 @@
   </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P35RFKZK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ═══ NAV ═══ -->
 <nav class="nav" id="mainNav">
   <div class="wrap">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo" aria-label="Método P4">
-        <img class="brand-icon" src="assets/01%20(1).png" alt="Método P4">
+        <img class="brand-icon" src="assets/01%20(1).png" alt="Método P4" decoding="async">
       </a>
       <div style="display:flex;align-items:center;gap:16px;">
         <button class="nav-cta" onclick="openModal(event)">Quero aprender agora!</button>
@@ -1177,8 +1190,8 @@
         src="assets/video-aula.mp4"
         controls
         playsinline
-        preload="metadata"
-        poster="assets/6c9bae32-d7b5-4352-9dbc-603d1d855d01.png"
+        preload="none"
+        poster="assets/poster-aula.webp"
         title="Como funcionam as aulas — Tributário para Marketplaces">
       </video>
     </div>
@@ -1397,7 +1410,7 @@
       <div class="footer-top">
         <div class="foot-brand">
           <div class="foot-logo">
-            <img class="brand-icon" src="assets/03.png" alt="Método P4">
+            <img class="brand-icon" src="assets/03.png" alt="Método P4" loading="lazy" decoding="async">
           </div>
           <p class="foot-tag">Tributário para Marketplaces</p>
           <div class="foot-social" aria-label="Redes sociais">
@@ -1557,7 +1570,7 @@
       const val = p.get(key);
       return val && val.trim() ? val.trim() : '';
     };
-    const trackedKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'channel', 'canal'];
+    const trackedKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'channel', 'canal'];
     const hasTrackingParam = trackedKeys.some((key) => getParam(key));
 
     // Keep UTMs for tracking, but remove them from the visible URL.
@@ -1575,6 +1588,7 @@
       utm_medium:   getParam('utm_medium'),
       utm_campaign: getParam('utm_campaign'),
       utm_content:  getParam('utm_content'),
+      utm_term:     getParam('utm_term'),
       referrer:     document.referrer || '',
       page_url:     initialUrl,
       timestamp:    new Date().toISOString(),
@@ -1582,7 +1596,8 @@
   })();
 
   // ── FORM ──
-  const WEBHOOK_URL = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
+  const WEBHOOK_URL  = 'https://ecomidia-n8n.misrsj.easypanel.host/webhook/p4-consultoria';
+  const WEBHOOK_URL2 = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
   const CHECKOUT_URL = 'https://payfast.greenn.com.br/9ypndtq/offer/BccCaP?b_id_1=uwuqt83&b_offer_1=RmOKr1';
 
   function maskPhone(input) {
@@ -1635,10 +1650,28 @@
       regime_tributario:     document.getElementById('f-regime').value,
       ..._utms,
     };
-    try { if (WEBHOOK_URL) await fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) }); } catch(_) {}
+    var qualified = payload.nivel_ml !== 'sem_medalha' && payload.regime_tributario !== 'mei';
+    var mqlTag    = qualified ? 'qualified_lead' : 'lead_disqualified';
+    const bodyNew = JSON.stringify({ evento: 'form_submit', projeto: 'lead-tributario', mql: mqlTag, ...payload });
+    const bodyOld = JSON.stringify(payload);
     document.getElementById('formState').style.display = 'none';
     const s = document.getElementById('successState'); s.style.display = 'block'; s.focus();
-    setTimeout(() => { window.location.assign(CHECKOUT_URL); }, 1000);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: mqlTag,
+      lead_nome: payload.nome,
+      lead_email: payload.email,
+      lead_whatsapp: payload.whatsapp,
+      browser_user_agent: navigator.userAgent,
+      browser_language: navigator.language,
+      browser_platform: navigator.platform,
+      screen_resolution: screen.width + 'x' + screen.height,
+      viewport: window.innerWidth + 'x' + window.innerHeight,
+      eventCallback: function() { window.location.assign(CHECKOUT_URL); },
+      eventTimeout: 2000,
+    });
+    if (WEBHOOK_URL)  fetch(WEBHOOK_URL,  { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyNew,  keepalive: true }).catch(function() {});
+    if (WEBHOOK_URL2) fetch(WEBHOOK_URL2, { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyOld, keepalive: true }).catch(function() {});
   }
 
   ['f-nome','f-wpp','f-wpp2','f-email'].forEach(id => {
