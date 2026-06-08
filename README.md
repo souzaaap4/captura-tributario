@@ -56,7 +56,7 @@ O **Captura Tributário** foi construído para transformar tráfego pago em lead
 | `hostgator_upload_pago/` | Pacote pronto para upload em produção |
 | `assets/` | Imagens, vídeos e ícones da LP |
 | `fonts/` | Tipografia local (Sora) |
-| `n8n-workflow-tributario.json` | Workflow de automação n8n exportado |
+| `docs/n8n-workflow-tributario.json` | Workflow de automação n8n exportado |
 | `DOCUMENTACAO.md` | Documentação técnica completa |
 | `TECNICO.md` | Guia técnico de manutenção |
 
@@ -105,7 +105,7 @@ flowchart LR
 │  ├─ tributario-tay-depoimentos/
 │  └─ tributario-tay-fonts/
 ├─ index.html
-├─ n8n-workflow-tributario.json
+├─ docs/n8n-workflow-tributario.json
 ├─ DOCUMENTACAO.md
 ├─ TECNICO.md
 ├─ links-utms-facebook-google.md
