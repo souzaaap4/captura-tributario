@@ -874,19 +874,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .footer-policy a:hover { color: rgba(231,235,241,.86); }
 
     /* ════════════════════════
-       WHATSAPP FLOAT
-    ════════════════════════ */
-    .wa-btn {
-      position: fixed; bottom: 24px; right: 24px; z-index: 150;
-      width: 56px; height: 56px; border-radius: 50%;
-      background: #25D366; display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; color: #fff;
-      box-shadow: 0 8px 24px rgba(37,211,102,.45);
-      transition: transform .3s, box-shadow .3s;
-    }
-    .wa-btn:hover { transform: scale(1.1); box-shadow: 0 12px 32px rgba(37,211,102,.55); }
-
-    /* ════════════════════════
        MODAL
     ════════════════════════ */
     .overlay {
@@ -1417,7 +1404,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="https://www.instagram.com/metodop4/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://www.linkedin.com/company/m%C3%A9todo-p4/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="https://www.youtube.com/@gabriel_pim" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="https://wa.me/5519997258140" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
 
@@ -1438,12 +1424,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </footer>
-
-
-<!-- ═══ WHATSAPP ═══ -->
-<a href="https://wa.me/5519997258140?text=Ol%C3%A1!%20Vi%20o%20curso%20%22Tribut%C3%A1rio%20para%20Marketplaces%22%20do%20M%C3%A9todo%20P4%20e%20tenho%20interesse.%20Podem%20me%20ajudar%3F" class="wa-btn" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-  <i class="fab fa-whatsapp"></i>
-</a>
 
 
 <!-- ═══ MODAL ═══ -->
@@ -1563,36 +1543,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
 
   // ── UTM CAPTURE ──
+  // A URL já foi limpa por captureAndCleanTracking() no <head>, então
+  // lemos direto de window.__leadTracking, que foi preenchido antes da limpeza.
   const _utms = (() => {
-    const initialUrl = (window.__leadTracking && window.__leadTracking.page_url) || window.location.href;
-    const p = new URLSearchParams(window.location.search);
-    const getParam = (key) => {
-      const val = p.get(key);
-      return val && val.trim() ? val.trim() : '';
-    };
-    const trackedKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'channel', 'canal'];
-    const hasTrackingParam = trackedKeys.some((key) => getParam(key));
-
-    // Keep UTMs for tracking, but remove them from the visible URL.
-    if (hasTrackingParam && window.history && window.history.replaceState) {
-      const cleanParams = new URLSearchParams(window.location.search);
-      trackedKeys.forEach((key) => cleanParams.delete(key));
-      const cleanQuery = cleanParams.toString();
-      const cleanUrl = `${window.location.pathname}${cleanQuery ? `?${cleanQuery}` : ''}${window.location.hash}`;
-      window.history.replaceState({}, document.title, cleanUrl);
-    }
-
+    const t = window.__leadTracking || {};
     return {
-      channel:      getParam('channel') || getParam('canal'),
-      utm_source:   getParam('utm_source'),
-      utm_medium:   getParam('utm_medium'),
-      utm_campaign: getParam('utm_campaign'),
-      utm_content:  getParam('utm_content'),
-      utm_term:     getParam('utm_term'),
-      referrer:     document.referrer || '',
-      page_url:     initialUrl,
-      timestamp:    new Date().toISOString(),
+      channel:      t.channel      || '',
+      utm_source:   t.utm_source   || '',
+      utm_medium:   t.utm_medium   || '',
+      utm_campaign: t.utm_campaign || '',
+      utm_content:  t.utm_content  || '',
+      utm_term:     t.utm_term     || '',
+      referrer:     t.referrer     || document.referrer || '',
+      page_url:     t.page_url     || window.location.href,
+      timestamp:    t.timestamp    || new Date().toISOString(),
     };
+  })();
+
+  // ── UTM → CHECKOUT LINKS ──
+  // Propaga UTMs para links de checkout já presentes na página (CTAs estáticos)
+  (function() {
+    var utmFields = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    Array.from(document.getElementsByTagName('a')).forEach(function(link) {
+      if (!link.href || link.href.includes('#')) return;
+      try {
+        var url = new URL(link.href);
+        if (!url.hostname.includes('greenn.com.br')) return;
+        utmFields.forEach(function(f) { if (_utms[f]) url.searchParams.set(f, _utms[f]); });
+        if (_utms.channel) url.searchParams.set('src', _utms.channel);
+        link.href = url.href;
+      } catch(e) {}
+    });
   })();
 
   // ── FORM ──
@@ -1652,8 +1633,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
     var qualified = payload.nivel_ml !== 'sem_medalha' && payload.regime_tributario !== 'mei';
     var mqlTag    = qualified ? 'qualified_lead' : 'lead_disqualified';
-    const bodyNew = JSON.stringify({ evento: 'form_submit', projeto: 'lead-tributario', mql: mqlTag, ...payload });
-    const bodyOld = JSON.stringify(payload);
+    const bodyNew = JSON.stringify({ evento: 'form_submit', projeto: 'lead-tributario', mql: qualified ? 'sim' : 'não', ...payload });
+    const bodyOld = JSON.stringify({ mql: qualified ? 'sim' : 'não', ...payload });
+    // Monta URL de checkout pré-populada com dados do cliente + UTMs
+    var _checkoutUrl = new URL(CHECKOUT_URL);
+    _checkoutUrl.searchParams.set('fn', payload.nome);
+    _checkoutUrl.searchParams.set('em', payload.email);
+    _checkoutUrl.searchParams.set('ph', payload.whatsapp.replace(/\D/g, ''));
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(f) {
+      if (_utms[f]) _checkoutUrl.searchParams.set(f, _utms[f]);
+    });
+    if (_utms.channel) _checkoutUrl.searchParams.set('src', _utms.channel);
+    var _checkoutHref = _checkoutUrl.href;
+
     document.getElementById('formState').style.display = 'none';
     const s = document.getElementById('successState'); s.style.display = 'block'; s.focus();
     window.dataLayer = window.dataLayer || [];
@@ -1667,7 +1659,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       browser_platform: navigator.platform,
       screen_resolution: screen.width + 'x' + screen.height,
       viewport: window.innerWidth + 'x' + window.innerHeight,
-      eventCallback: function() { window.location.assign(CHECKOUT_URL); },
+      eventCallback: function() { window.location.assign(_checkoutHref); },
       eventTimeout: 2000,
     });
     if (WEBHOOK_URL)  fetch(WEBHOOK_URL,  { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyNew,  keepalive: true }).catch(function() {});

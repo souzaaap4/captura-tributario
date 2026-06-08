@@ -19,7 +19,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const raw = $json.body ?? $json;\nlet data = raw;\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch { data = {}; }\n}\nif (typeof data !== 'object' || data === null || Array.isArray(data)) { data = {}; }\n\nconst pick = (obj, keys, fallback = '') => {\n  for (const key of keys) {\n    const val = obj[key];\n    if (val !== undefined && val !== null && String(val).trim() !== '') {\n      return typeof val === 'string' ? val.trim() : String(val);\n    }\n  }\n  return fallback;\n};\n\nconst normalizePhone = (value) => {\n  const digitsOnly = String(value ?? '').replace(/\\D/g, '');\n  if (!digitsOnly) return '';\n\n  let br = digitsOnly;\n  if (br.startsWith('55') && br.length > 11) br = br.slice(2);\n  br = br.slice(0, 11);\n\n  // Leading apostrophe forces text in Google Sheets and prevents formula parse errors.\n  return br ? `'${br}` : '';\n};\n\nconst dateBR = new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });\n\nconst nome  = pick(data, ['nome', 'Nome completo'], '');\nconst email = pick(data, ['email', 'Qual seu e-mail?'], '');\n\nconst wppRaw  = pick(data, ['whatsapp', 'Qual o seu WhatsApp?', 'Qual o seu WhatsApp', 'WhatsApp'], '');\nconst wpp2Raw = pick(data, ['whatsapp_confirmacao', 'Confirme seu WhatsApp', 'Confirmar WhatsApp'], '');\nconst wpp  = normalizePhone(wppRaw);\nconst wpp2 = normalizePhone(wpp2Raw);\n\nconst medalha = pick(data, ['nivel_ml', 'Qual é a sua medalha no Mercado Livre?'], '');\nconst regime  = pick(data, ['regime_tributario', 'Qual é o seu regime tributário atual?'], '');\n\nconst nivelLabels = {\n  sem_medalha: 'Sem medalha',\n  ouro:        'Ouro',\n  ouro_plus:   'Ouro Plus',\n  platinum:    'Platinum'\n};\nconst regimeLabels = {\n  mei:               'MEI',\n  simples_nacional:  'Simples Nacional',\n  lucro_presumido:   'Lucro Presumido',\n  lucro_real:        'Lucro Real'\n};\nconst medalhaLegivel = nivelLabels[medalha] || medalha;\nconst regimeLegivel  = regimeLabels[regime]  || regime;\n\nconst channel      = pick(data, ['channel', 'canal'], '');\nconst utm_source   = pick(data, ['utm_source', 'source'], '');\nconst utm_medium   = pick(data, ['utm_medium', 'medium'], '');\nconst utm_campaign = pick(data, ['utm_campaign', 'campaign'], '');\nconst utm_content  = pick(data, ['utm_content', 'content'], '');\nconst timestamp    = pick(data, ['timestamp'], new Date().toISOString());\n\nreturn [{\n  json: {\n    'Entrada leads':                          dateBR,\n    'Funil':                                  'Tributario',\n    'Nome completo ':                         nome,\n    'Qual seu e-mail?':                       email,\n    'Qual o seu WhatsApp?':                   wpp,\n    'Confirme seu WhatsApp':                  wpp2,\n    'Qual é a sua medalha no Mercado Livre?': medalhaLegivel,\n    'Qual é o seu regime tributário atual?':  regimeLegivel,\n    'Pergunta adicional':                     `Medalha ML: ${medalhaLegivel} | Regime: ${regimeLegivel}`,\n    channel, utm_source, utm_medium, utm_campaign, utm_content, timestamp\n  }\n}];"
+        "jsCode": "const raw = $json.body ?? $json;\nlet data = raw;\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch { data = {}; }\n}\nif (typeof data !== 'object' || data === null || Array.isArray(data)) { data = {}; }\n\nconst pick = (obj, keys, fallback = '') => {\n  for (const key of keys) {\n    const val = obj[key];\n    if (val !== undefined && val !== null && String(val).trim() !== '') {\n      return typeof val === 'string' ? val.trim() : String(val);\n    }\n  }\n  return fallback;\n};\n\nconst normalizePhone = (value) => {\n  const digitsOnly = String(value ?? '').replace(/\\D/g, '');\n  if (!digitsOnly) return '';\n\n  let br = digitsOnly;\n  if (br.startsWith('55') && br.length > 11) br = br.slice(2);\n  br = br.slice(0, 11);\n\n  return br ? `'${br}` : '';\n};\n\nconst dateBR = new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });\n\nconst nome  = pick(data, ['nome', 'Nome completo'], '');\nconst email = pick(data, ['email', 'Qual seu e-mail?'], '');\n\nconst wppRaw  = pick(data, ['whatsapp', 'Qual o seu WhatsApp?', 'Qual o seu WhatsApp', 'WhatsApp'], '');\nconst wpp2Raw = pick(data, ['whatsapp_confirmacao', 'Confirme seu WhatsApp', 'Confirmar WhatsApp'], '');\nconst wpp  = normalizePhone(wppRaw);\nconst wpp2 = normalizePhone(wpp2Raw);\n\nconst medalha = pick(data, ['nivel_ml', 'Qual é a sua medalha no Mercado Livre?'], '');\nconst regime  = pick(data, ['regime_tributario', 'Qual é o seu regime tributário atual?'], '');\n\nconst nivelLabels = {\n  sem_medalha: 'Sem medalha',\n  ouro:        'Ouro',\n  ouro_plus:   'Ouro Plus',\n  platinum:    'Platinum'\n};\nconst regimeLabels = {\n  mei:               'MEI',\n  simples_nacional:  'Simples Nacional',\n  lucro_presumido:   'Lucro Presumido',\n  lucro_real:        'Lucro Real'\n};\nconst medalhaLegivel = nivelLabels[medalha] || medalha;\nconst regimeLegivel  = regimeLabels[regime]  || regime;\n\nconst channel  = pick(data, ['channel', 'canal'], '');\nconst source   = pick(data, ['utm_source', 'source'], '');\nconst medium   = pick(data, ['utm_medium', 'medium'], '');\nconst campaign = pick(data, ['utm_campaign', 'campaign'], '');\nconst content  = pick(data, ['utm_content', 'content'], '');\nconst referrer = pick(data, ['referrer'], '');\nconst pageUrl  = pick(data, ['page_url'], '');\nconst timestamp = pick(data, ['timestamp'], new Date().toISOString());\nconst mql      = pick(data, ['mql'], '');\n\nreturn [{\n  json: {\n    'Entrada leads':         dateBR,\n    'Funil':                 'Tributario',\n    'Nome completo':         nome,\n    'Qual seu e-mail?':      email,\n    'Qual o seu WhatsApp?':  wpp,\n    'Confirme seu WhatsApp': wpp2,\n    'Pergunta adicional':    `Medalha ML: ${medalhaLegivel} | Regime: ${regimeLegivel}`,\n    channel,\n    'Source':   source,\n    'Medium':   medium,\n    'Campaign': campaign,\n    'Content':  content,\n    'Referrer': referrer,\n    'Page URL': pageUrl,\n    timestamp,\n    'MQL': mql\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -49,359 +49,41 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Entrada leads": "={{ $json['Entrada leads'] }}",
-            "Nome completo ": "={{ $json['Nome completo '] }}",
-            "Qual seu e-mail?": "={{ $json['Qual seu e-mail?'] }}",
-            "Qual o seu WhatsApp?": "={{ $json['Qual o seu WhatsApp?'] }}",
+            "Entrada leads":         "={{ $json['Entrada leads'] }}",
+            "Nome completo":         "={{ $json['Nome completo'] }}",
+            "Qual seu e-mail?":      "={{ $json['Qual seu e-mail?'] }}",
+            "Qual o seu WhatsApp?":  "={{ $json['Qual o seu WhatsApp?'] }}",
             "Confirme seu WhatsApp": "={{ $json['Confirme seu WhatsApp'] }}",
-            "Qual é a sua medalha no Mercado Livre?": "={{ $json['Qual é a sua medalha no Mercado Livre?'] }}",
-            "Qual é o seu regime tributário atual?": "={{ $json['Qual é o seu regime tributário atual?'] }}",
-            "Pergunta adicional": "={{ $json['Pergunta adicional'] }}",
-            "Funil": "={{ $json.Funil }}",
-            "channel": "={{ $json.channel }}",
-            "utm_source": "={{ $json.utm_source }}",
-            "utm_campaign": "={{ $json.utm_campaign }}",
-            "utm_medium": "={{ $json.utm_medium }}",
-            "utm_content": "={{ $json.utm_content }}",
-            "timestamp": "={{ $json.timestamp }}"
+            "Pergunta adicional":    "={{ $json['Pergunta adicional'] }}",
+            "Funil":                 "={{ $json.Funil }}",
+            "MQL":                   "={{ $json.MQL }}",
+            "channel":               "={{ $json.channel }}",
+            "Source":                "={{ $json.Source }}",
+            "Medium":                "={{ $json.Medium }}",
+            "Campaign":              "={{ $json.Campaign }}",
+            "Content":               "={{ $json.Content }}",
+            "Referrer":              "={{ $json.Referrer }}",
+            "Page URL":              "={{ $json['Page URL'] }}",
+            "timestamp":             "={{ $json.timestamp }}"
           },
           "matchingColumns": [],
           "schema": [
-            {
-              "id": "Entrada leads",
-              "displayName": "Entrada leads",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Data primeira tentativa contato/Primeira resposta",
-              "displayName": "Data primeira tentativa contato/Primeira resposta",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Data último contato ou tentativa",
-              "displayName": "Data último contato ou tentativa",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Nome completo ",
-              "displayName": "Nome completo ",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Qual seu e-mail?",
-              "displayName": "Qual seu e-mail?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Qual o seu WhatsApp?",
-              "displayName": "Qual o seu WhatsApp?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Confirme seu WhatsApp",
-              "displayName": "Confirme seu WhatsApp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Qual é a sua medalha no Mercado Livre?",
-              "displayName": "Qual é a sua medalha no Mercado Livre?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Qual é o seu regime tributário atual?",
-              "displayName": "Qual é o seu regime tributário atual?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Funil",
-              "displayName": "Funil",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Pré Venda",
-              "displayName": "Pré Venda",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Pergunta adicional",
-              "displayName": "Pergunta adicional",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Respondente?",
-              "displayName": "Respondente?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "MQL",
-              "displayName": "MQL",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Agendado?",
-              "displayName": "Agendado?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Data Agendamento",
-              "displayName": "Data Agendamento",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Closer",
-              "displayName": "Closer",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Observações ",
-              "displayName": "Observações ",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Por que não agendou?",
-              "displayName": "Por que não agendou?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Próxima interação pré vendas",
-              "displayName": "Próxima interação pré vendas",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Reunião realizada?",
-              "displayName": "Reunião realizada?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Data Reunião ou No-show",
-              "displayName": "Data Reunião ou No-show",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Situação",
-              "displayName": "Situação",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Data situação",
-              "displayName": "Data situação",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Por que recusou a proposta?",
-              "displayName": "Por que recusou a proposta?",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Produto",
-              "displayName": "Produto",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Valor total",
-              "displayName": "Valor total",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Caixa Coletado",
-              "displayName": "Caixa Coletado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Próxima interação Closer",
-              "displayName": "Próxima interação Closer",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "channel",
-              "displayName": "channel",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "utm_source",
-              "displayName": "utm_source",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "utm_medium",
-              "displayName": "utm_medium",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "utm_campaign",
-              "displayName": "utm_campaign",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "utm_content",
-              "displayName": "utm_content",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "timestamp",
-              "displayName": "timestamp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
+            { "id": "Entrada leads",         "displayName": "Entrada leads",         "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Nome completo",         "displayName": "Nome completo",         "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Qual seu e-mail?",      "displayName": "Qual seu e-mail?",      "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Qual o seu WhatsApp?",  "displayName": "Qual o seu WhatsApp?",  "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Confirme seu WhatsApp", "displayName": "Confirme seu WhatsApp", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Pergunta adicional",    "displayName": "Pergunta adicional",    "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Funil",                 "displayName": "Funil",                 "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "MQL",                   "displayName": "MQL",                   "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "channel",               "displayName": "channel",               "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Source",                "displayName": "Source",                "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Medium",                "displayName": "Medium",                "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Campaign",              "displayName": "Campaign",              "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Content",               "displayName": "Content",               "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Referrer",              "displayName": "Referrer",              "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Page URL",              "displayName": "Page URL",              "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "timestamp",             "displayName": "timestamp",             "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
@@ -454,4 +136,3 @@
     "instanceId": "a2041f8092fce2115726eddb1e426926a5611d3381df73a6f0a4d6fdebec6e0b"
   }
 }
-
