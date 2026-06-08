@@ -7,6 +7,8 @@
 ![Automação](https://img.shields.io/badge/automacao-n8n%20Webhook-0f766e)
 ![Deploy](https://img.shields.io/badge/deploy-HostGator%2FcPanel-7c3aed)
 
+🌐 **[Ver página ao vivo](https://tributariomarketplace.metodop4.com.br/)** · 📁 **[Repositório GitHub](https://github.com/taysouzaa/captura-tributario)**
+
 README de apresentação para GitHub.
 
 ## Visão do Projeto
