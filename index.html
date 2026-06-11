@@ -22,6 +22,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         utm_campaign: p.get('utm_campaign') || '',
         utm_content: p.get('utm_content') || '',
         utm_term: p.get('utm_term') || '',
+        fbclid: p.get('fbclid') || '',
         referrer: document.referrer || '',
         page_url: initialUrl,
         timestamp: new Date().toISOString()
@@ -1554,6 +1555,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       utm_campaign: t.utm_campaign || '',
       utm_content:  t.utm_content  || '',
       utm_term:     t.utm_term     || '',
+      fbclid:       t.fbclid       || '',
       referrer:     t.referrer     || document.referrer || '',
       page_url:     t.page_url     || window.location.href,
       timestamp:    t.timestamp    || new Date().toISOString(),
@@ -1644,6 +1646,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (_utms[f]) _checkoutUrl.searchParams.set(f, _utms[f]);
     });
     if (_utms.channel) _checkoutUrl.searchParams.set('src', _utms.channel);
+    // Propaga fbclid para atribuição de conversão no Meta Ads
+    var _fbclid = _utms.fbclid || new URLSearchParams(window.location.search).get('fbclid');
+    if (_fbclid) _checkoutUrl.searchParams.set('fbclid', _fbclid);
     var _checkoutHref = _checkoutUrl.href;
 
     document.getElementById('formState').style.display = 'none';
