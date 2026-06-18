@@ -11,4 +11,10 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+hostgator_upload_pago/
 hostgator_upload_pago.zip
+*.zip
+*.mp4
+assets/lp-tributario.png
+.claude/
+*.log
