@@ -1,15 +1,13 @@
 # Captura Tributário
 
-> Landing page privada para captação e qualificação de leads para o curso de tributação para marketplaces — tráfego pago.
+> Landing page de captação e qualificação de leads para o curso de tributação para marketplaces — tráfego pago.
 
-![Status](https://img.shields.io/badge/status-projeto%20privado-8b0000)
+![Status](https://img.shields.io/badge/status-ativo-22c55e)
 ![Frontend](https://img.shields.io/badge/frontend-HTML%2FCSS%2FJS-1f6feb)
 ![Automação](https://img.shields.io/badge/automacao-n8n%20Webhook-0f766e)
 ![Deploy](https://img.shields.io/badge/deploy-HostGator%2FcPanel-7c3aed)
 
 🌐 **[Ver página ao vivo](https://tributariomarketplace.metodop4.com.br/)** · 📁 **[Repositório GitHub](https://github.com/taysouzaa/captura-tributario)**
-
-README de apresentação para GitHub.
 
 ## Visão do Projeto
 
@@ -47,20 +45,21 @@ O **Captura Tributário** foi construído para transformar tráfego pago em lead
 ## Stack Técnica
 
 - **Frontend:** HTML5, CSS3, JavaScript (vanilla)
+- **Tipografia:** Sora (local via `@font-face`)
+- **Tracking:** Google Tag Manager + Microsoft Clarity
 - **Integração:** Webhook n8n (direto, sem proxy)
-- **Deploy:** HostGator/cPanel — upload manual via `hostgator_upload_pago/`
+- **Deploy:** HostGator/cPanel
 
 ## Arquitetura (Resumo)
 
 | Camada | Responsabilidade |
 | --- | --- |
-| `index.html` | LP principal de desenvolvimento |
-| `hostgator_upload_pago/` | Pacote pronto para upload em produção |
-| `assets/` | Imagens, vídeos e ícones da LP |
+| `index.html` | LP principal |
+| `assets/` | Imagens, vídeos e ícones |
 | `fonts/` | Tipografia local (Sora) |
-| `docs/n8n-workflow-tributario.json` | Workflow de automação n8n exportado |
+| `depoimentos/` | Screenshots de depoimentos |
+| `docs/` | Workflow n8n e documentação de UTMs |
 | `DOCUMENTACAO.md` | Documentação técnica completa |
-| `TECNICO.md` | Guia técnico de manutenção |
 
 ## Funcionamento do Sistema
 
@@ -83,40 +82,28 @@ flowchart LR
     F --> H[Gravação na aba banco de dados]
 ```
 
-## Diferenciais de Engenharia
-
-- Tracking first-touch desacoplado da lógica de formulário.
-- Qualificação calculada no frontend antes do envio.
-- Deduplicação server-side no n8n para evitar leads duplicados.
-- Pacote de deploy isolado (`hostgator_upload_pago/`) para publicação direta.
-
 ## Estrutura do Projeto
 
 ```text
 .
 ├─ assets/
-│  ├─ 3.svg
+│  ├─ hero-bg.png
+│  ├─ logo-p4-nav.png
+│  ├─ logo-p4-footer.png
+│  ├─ equipe-p4.jpg
+│  ├─ equipe-p4-reuniao.jpg
+│  ├─ poster-aula.webp
 │  └─ video-aula.mp4
 ├─ depoimentos/
 ├─ fonts/
 │  └─ static/
-├─ hostgator_upload_pago/
-│  ├─ index.html
-│  ├─ .htaccess
-│  ├─ tributario-tay-assets/
-│  ├─ tributario-tay-depoimentos/
-│  └─ tributario-tay-fonts/
+├─ docs/
+│  ├─ n8n-workflow-tributario.json
+│  └─ links-utms-facebook-google.md
 ├─ index.html
-├─ docs/n8n-workflow-tributario.json
 ├─ DOCUMENTACAO.md
-├─ TECNICO.md
-├─ links-utms-facebook-google.md
 └─ LICENSE
 ```
-
-## Deploy
-
-- **HostGator/cPanel:** upload manual do conteúdo de `hostgator_upload_pago/` via Gerenciador de Arquivos ou FTP.
 
 ## Licença
 
