@@ -1124,6 +1124,77 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       /* Modal */
       .modal { padding: 28px 18px; }
     }
+
+    /* ── mobile-fixes ── */
+
+    /* 900px: colapsar .sobre-photo-card.secondary antes do 768px */
+    @media (max-width: 900px) {
+      .sobre-photo-card.secondary {
+        margin-top: 0;
+        transform: none;
+      }
+    }
+
+    /* 640px: breakpoint intermediário ausente */
+    @media (max-width: 640px) {
+      /* Hero background */
+      .hero {
+        background-position: 60% center;
+      }
+
+      /* Price card padding */
+      .price-card {
+        padding: 28px 20px 24px;
+        transform: none;
+      }
+
+      /* Price big font-size cap */
+      .price-big {
+        font-size: clamp(3rem, 9vw, 3.2rem);
+      }
+
+      /* Botão hero full width em telas menores */
+      .hero .btn-green-lg {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* hero-cta-group full width */
+      .hero-cta-group {
+        width: 100%;
+        align-items: stretch;
+      }
+    }
+
+    /* 480px: complementos não cobertos */
+    @media (max-width: 480px) {
+      /* Hero background-position mais centralizado */
+      .hero {
+        background-position: 50% center;
+      }
+
+      /* FAQ padding ajustado */
+      .faq-q {
+        padding: 14px 16px;
+      }
+
+      /* Botões principais full width */
+      .btn-green-lg {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* pillar-grid centralizado */
+      .pillar-grid {
+        justify-content: center;
+      }
+
+      /* sobre-photo-card.secondary zerado */
+      .sobre-photo-card.secondary {
+        margin-top: 0;
+        transform: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1332,9 +1403,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <div class="pillar-grid" aria-label="Pilares do Método P4">
             <div class="pillar-pill"><i class="fas fa-box" aria-hidden="true"></i>Produto</div>
+            <div class="pillar-pill"><i class="fas fa-tag" aria-hidden="true"></i>Preço</div>
             <div class="pillar-pill"><i class="fas fa-store" aria-hidden="true"></i>Plataforma</div>
             <div class="pillar-pill"><i class="fas fa-chart-line" aria-hidden="true"></i>Performance</div>
-            <div class="pillar-pill"><i class="fas fa-cogs" aria-hidden="true"></i>Processos</div>
           </div>
 
           <button class="btn-green btn-green-lg" onclick="openModal(event)">
