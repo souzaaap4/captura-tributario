@@ -51,9 +51,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta property="og:url"         content="https://tributariomarketplace.metodop4.com.br/">
   <meta property="og:title"       content="Tributário para Marketplaces — Curso Completo | Método P4">
   <meta property="og:description" content="Aprenda tributação para marketplaces. Simples Nacional, ICMS-ST, Lucro Real e muito mais. Curso completo do Método P4.">
-  <meta property="og:image"       content="https://tributariomarketplace.metodop4.com.br/assets/lp-tributario.png">
-  <meta property="og:image:width"  content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image"       content="https://tributariomarketplace.metodop4.com.br/assets/logo-p4-nav.png">
+  <meta property="og:image:type"   content="image/png">
+  <meta property="og:image:alt"    content="Logo Método P4">
   <meta property="og:locale"      content="pt_BR">
   <meta property="og:site_name"   content="Método P4">
 
@@ -61,7 +61,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:title"       content="Tributário para Marketplaces — Curso Completo | Método P4">
   <meta name="twitter:description" content="Aprenda tributação para marketplaces. Simples Nacional, ICMS-ST, Lucro Real e muito mais.">
-  <meta name="twitter:image"       content="https://tributariomarketplace.metodop4.com.br/assets/lp-tributario.png">
+  <meta name="twitter:image"       content="https://tributariomarketplace.metodop4.com.br/assets/logo-p4-nav.png">
 
   <!-- ── SEO: Robots ── -->
   <meta name="robots" content="index, follow">
@@ -131,12 +131,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+    }
     body {
       font-family: var(--font);
       background: linear-gradient(180deg, #f7fafd 0%, #f0f4f9 100%);
       color: var(--text-d);
       overflow-x: hidden;
+      max-width: 100%;
+      overscroll-behavior-x: none;
       -webkit-font-smoothing: antialiased;
     }
     img { display: block; max-width: 100%; }
@@ -416,6 +422,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background: linear-gradient(180deg, #d8ecf7 0%, #e6f3fa 100%);
       padding: var(--section-uniform-pad) 0;
       min-height: var(--section-uniform-min);
+      overflow-x: hidden;
     }
     .conteudo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
     .conteudo-left {
@@ -664,7 +671,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     /* Carousel */
     .carousel-wrap { position: relative; }
-    .carousel { display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 6px 2px; cursor: grab; }
+    .carousel {
+      display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
+      scrollbar-width: none; padding: 6px 2px; cursor: grab;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x pinch-zoom;
+      -webkit-overflow-scrolling: touch;
+    }
     .carousel::-webkit-scrollbar { display: none; }
     .carousel:active { cursor: grabbing; }
 
@@ -811,7 +824,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       opacity: .8; filter: blur(6px); z-index: -1; pointer-events: none;
     }
     .sobre-inner { max-width: 100%; }
-    .sobre-photo-group { display: grid; gap: 18px; align-items: start; justify-items: stretch; overflow: visible; }
+    .sobre-photo-group {
+      display: grid; gap: 18px; align-items: start; justify-items: stretch;
+      overflow-x: hidden;
+      overflow-y: visible;
+    }
     .sobre-photo-card {
       position: relative; border-radius: 20px; overflow: hidden;
       box-shadow: 0 12px 48px rgba(0,0,0,.14);
