@@ -18,13 +18,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','channel','canal'];
       var initialUrl = window.location.href;
       var p = new URLSearchParams(window.location.search);
+      function safeGet(key) {
+        var v = p.get(key);
+        if (!v) return '';
+        // Handles double-encoding from Meta Ads (e.g. %252B → %2B → +)
+        try { return decodeURIComponent(v); } catch(e) { return v; }
+      }
       window.__leadTracking = {
-        channel: p.get('channel') || p.get('canal') || '',
-        utm_source: p.get('utm_source') || '',
-        utm_medium: p.get('utm_medium') || '',
-        utm_campaign: p.get('utm_campaign') || '',
-        utm_content: p.get('utm_content') || '',
-        utm_term: p.get('utm_term') || '',
+        channel: safeGet('channel') || safeGet('canal'),
+        utm_source: safeGet('utm_source'),
+        utm_medium: safeGet('utm_medium'),
+        utm_campaign: safeGet('utm_campaign'),
+        utm_content: safeGet('utm_content'),
+        utm_term: safeGet('utm_term'),
         fbclid: p.get('fbclid') || '',
         referrer: document.referrer || '',
         page_url: initialUrl,
