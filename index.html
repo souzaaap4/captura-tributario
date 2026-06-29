@@ -1759,6 +1759,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── FORM ──
   const WEBHOOK_URL  = 'https://ecomidia-n8n.misrsj.easypanel.host/webhook/p4-consultoria';
   const WEBHOOK_URL2 = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
+  // ATENÇÃO: este secret fica embutido no JS público — não é autenticação real,
+  // apenas eleva a régua contra abuso casual (quem inspecionar o código-fonte
+  // consegue ler o valor, assim como lia a própria URL do webhook antes desta
+  // correção). Para controle de acesso de verdade seria preciso um proxy
+  // server-side guardando o secret fora do cliente. — taynara.souza
+  const WEBHOOK_SECRET = '552654845b7793e78db5436bff0ecc7b996218257cab386d'; // header auth do webhook n8n (lead-Tributario)
   const CHECKOUT_URL = 'https://payfast.greenn.com.br/9ypndtq/offer/BccCaP?b_id_1=uwuqt83&b_offer_1=RmOKr1';
 
   function maskPhone(input) {
@@ -1797,6 +1803,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return ok;
   }
 
+  // Evita Formula/CSV Injection: campos de texto livre não podem virar fórmulas
+  // executáveis quando o lead cai na planilha (Google Sheets/Excel).
+  function sanitizeForSheets(obj) {
+    const risky = /^[=+\-@\t\r]/;
+    const out = {};
+    Object.keys(obj).forEach(function(k) {
+      const v = obj[k];
+      out[k] = (typeof v === 'string' && risky.test(v)) ? "'" + v : v;
+    });
+    return out;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!validateForm()) return;
@@ -1813,8 +1831,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
     var qualified = payload.nivel_ml !== 'sem_medalha' && payload.regime_tributario !== 'mei';
     var mqlTag    = qualified ? 'qualified_lead' : 'lead_disqualified';
-    const bodyNew = JSON.stringify({ evento: 'form_submit', projeto: 'lead-tributario', mql: qualified ? 'sim' : 'não', ...payload });
-    const bodyOld = JSON.stringify({ mql: qualified ? 'sim' : 'não', ...payload });
+    const bodyNew = JSON.stringify(sanitizeForSheets({ evento: 'form_submit', projeto: 'lead-tributario', mql: qualified ? 'sim' : 'não', ...payload }));
+    const bodyOld = JSON.stringify(sanitizeForSheets({ mql: qualified ? 'sim' : 'não', ...payload }));
     // Monta URL de checkout pré-populada com dados do cliente + UTMs
     var _checkoutUrl = new URL(CHECKOUT_URL);
     _checkoutUrl.searchParams.set('fn', payload.nome);
@@ -1846,7 +1864,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       eventTimeout: 2000,
     });
     if (WEBHOOK_URL)  fetch(WEBHOOK_URL,  { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyNew,  keepalive: true }).catch(function() {});
-    if (WEBHOOK_URL2) fetch(WEBHOOK_URL2, { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyOld, keepalive: true }).catch(function() {});
+    if (WEBHOOK_URL2) fetch(WEBHOOK_URL2, { method: 'POST', headers: {'Content-Type':'application/json', 'x-p4-webhook-secret': WEBHOOK_SECRET}, body: bodyOld, keepalive: true }).catch(function() {});
   }
 
   ['f-nome','f-wpp','f-wpp2','f-email'].forEach(id => {
