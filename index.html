@@ -1758,13 +1758,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ── FORM ──
   const WEBHOOK_URL  = 'https://ecomidia-n8n.misrsj.easypanel.host/webhook/p4-consultoria';
-  const WEBHOOK_URL2 = 'https://n8n.srv1095468.hstgr.cloud/webhook/lead-Tributario';
-  // ATENÇÃO: este secret fica embutido no JS público — não é autenticação real,
-  // apenas eleva a régua contra abuso casual (quem inspecionar o código-fonte
-  // consegue ler o valor, assim como lia a própria URL do webhook antes desta
-  // correção). Para controle de acesso de verdade seria preciso um proxy
-  // server-side guardando o secret fora do cliente. — taynara.souza
-  const WEBHOOK_SECRET = '552654845b7793e78db5436bff0ecc7b996218257cab386d'; // header auth do webhook n8n (lead-Tributario)
+  const WEBHOOK_URL2 = '/api/lead-proxy.php'; // proxy server-side (lead-Tributario)
+  // O secret do webhook n8n NÃO fica mais no JS público: vive apenas em
+  // api/config.php (no servidor, protegido por .htaccess) e é anexado pelo
+  // proxy api/lead-proxy.php antes de repassar ao n8n. — padronização P4
   const CHECKOUT_URL = 'https://payfast.greenn.com.br/9ypndtq/offer/BccCaP?b_id_1=uwuqt83&b_offer_1=RmOKr1';
 
   function maskPhone(input) {
@@ -1864,7 +1861,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       eventTimeout: 2000,
     });
     if (WEBHOOK_URL)  fetch(WEBHOOK_URL,  { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyNew,  keepalive: true }).catch(function() {});
-    if (WEBHOOK_URL2) fetch(WEBHOOK_URL2, { method: 'POST', headers: {'Content-Type':'application/json', 'x-p4-webhook-secret': WEBHOOK_SECRET}, body: bodyOld, keepalive: true }).catch(function() {});
+    if (WEBHOOK_URL2) fetch(WEBHOOK_URL2, { method: 'POST', headers: {'Content-Type':'application/json'}, body: bodyOld, keepalive: true }).catch(function() {});
   }
 
   ['f-nome','f-wpp','f-wpp2','f-email'].forEach(id => {
