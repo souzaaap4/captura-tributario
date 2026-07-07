@@ -1,0 +1,2395 @@
+{
+  "name": "lead-tributario",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-Tributario",
+        "options": {},
+        "authentication": "headerAuth"
+      },
+      "position": [
+        -640,
+        400
+      ],
+      "alwaysOutputData": true,
+      "webhookId": "578adbfb-0b52-4257-b174-c47a9c89902a",
+      "type": "n8n-nodes-base.webhook",
+      "id": "a2dc5d7d-955c-4aa5-b674-98d130d420df",
+      "typeVersion": 2.1,
+      "name": "Webhook lead-Tributario",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "xp7e85uBdxYv4k5a",
+          "name": "P4 Webhook Secret - lead-tributario"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.all()[0]?.json ?? {};\nconst raw = item.body ?? item;\nlet data = raw;\nif (typeof data === 'string') { try { data = JSON.parse(data); } catch { data = {}; } }\nif (typeof data !== 'object' || data === null || Array.isArray(data)) { data = {}; }\n\nconst pick = (obj, keys, fallback) => {\n  fallback = (fallback === undefined) ? '' : fallback;\n  for (const key of keys) {\n    const v = obj[key];\n    if (v !== undefined && v !== null && String(v).trim() !== '') {\n      return typeof v === 'string' ? v.trim() : String(v);\n    }\n  }\n  return fallback;\n};\nconst normalizePhone = (v) => {\n  const digits = String(v || '').replace(/\\D/g, '');\n  if (!digits) return '';\n  const br = (digits.startsWith('55') && digits.length > 11) ? digits.slice(2) : digits;\n  const d = br.slice(0, 11);\n  if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;\n  if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;\n  return d;\n};\nconst now = new Date();\nconst dateBR = now.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });\nconst timeBR = now.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' });\n\nconst nome    = pick(data, ['Nome completo', 'nome']);\nconst email   = pick(data, ['E-mail', 'email', 'e-mail', 'Qual seu e-mail?']);\nconst wppRaw  = pick(data, ['WhatsApp', 'whatsapp', 'Qual o seu WhatsApp?']);\nconst wpp2Raw = pick(data, ['Confirmar WhatsApp', 'whatsapp_confirmacao', 'confirmar_whatsapp']);\nconst wpp     = normalizePhone(wppRaw);\nconst wpp2    = normalizePhone(wpp2Raw);\n\nconst channel  = pick(data, ['channel', 'canal', 'Channel']);\nconst source   = pick(data, ['utm_source', 'source', 'Source']);\nconst medium   = pick(data, ['utm_medium', 'medium', 'Medium']);\nconst campaign = pick(data, ['utm_campaign', 'campaign', 'Campaign']);\nconst content  = pick(data, ['utm_content', 'content', 'Content']);\nconst utmTerm  = pick(data, ['utm_term', 'Utm Term']);\nconst utmId    = pick(data, ['utm_id', 'Utm Id']);\nconst fbclid   = pick(data, ['fbclid']);\nconst src      = pick(data, ['src']);\nconst sck      = pick(data, ['sck']);\nconst aId      = pick(data, ['a_id']);\nconst referrer = pick(data, ['referrer', 'Referrer']);\nconst pageUrl  = pick(data, ['page_url', 'Page URL']);\nconst timestamp = now.toISOString();\n\nconst FUNIL = 'Tributario';\nconst nivelML = pick(data, ['nivel_ml','Medalha ML','Medalha no Mercado Livre']);\nconst regime  = pick(data, ['regime_tributario','Regime tributario','regime']);\nconst nL = { sem_medalha:'Sem medalha', nao_tenho:'Sem medalha', ouro:'Ouro', ouro_plus:'Ouro Plus', platinum:'Platinum', mercado_lider:'Mercado Líder' };\nconst rL = { mei:'MEI', simples_nacional:'Simples Nacional', lucro_presumido:'Lucro Presumido', lucro_real:'Lucro Real' };\nconst nivelLeg  = nL[nivelML] || nivelML;\nconst regimeLeg = rL[regime]  || regime;\nconst partes = [];\nif (nivelLeg)  partes.push('Medalha ML: ' + nivelLeg);\nif (regimeLeg) partes.push('Regime: ' + regimeLeg);\nconst pergAdic = pick(data, ['Pergunta adicional','Pergunta Adicional','pergunta_adicional'], partes.join(' | '));\nconst qualifiedServer = !!nivelML && nivelML !== 'sem_medalha' && nivelML !== 'nao_tenho' && !!regime && regime !== 'mei';\n\nconst mql = qualifiedServer ? 'Sim' : 'Não';\nreturn [{ json: {\n  'Data de entrada de leads': dateBR,\n  'Hora':                     timeBR,\n  'Nome completo':            nome,\n  'E-mail':                   email,\n  'WhatsApp':                 wpp,\n  'Confirmar WhatsApp':       wpp2,\n  'Pergunta Adicional':       pergAdic,\n  Funil:                      FUNIL,\n  Ingresso:                   '',\n  channel:                    channel,\n  Source:                     source,\n  Medium:                     medium,\n  Campaign:                   campaign,\n  Content:                    content,\n  'Utm Term':                 utmTerm,\n  'Utm Id':                   utmId,\n  Fbclid:                     fbclid,\n  Src:                        src,\n  Sck:                        sck,\n  'A Id':                     aId,\n  Referrer:                   referrer,\n  'Page URL':                 pageUrl,\n  Timestamp:                  timestamp,\n  _wppDigits:                 wpp,\n  MQL:                        mql\n} }];"
+      },
+      "id": "d8711c26-1388-490a-ad08-bf54ff5282d4",
+      "position": [
+        -420,
+        400
+      ],
+      "type": "n8n-nodes-base.code",
+      "name": "Parse lead-Tributario",
+      "typeVersion": 2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Barra na frente qualquer chamada ao webhook (direta, sem passar pelo\n// formulário) que venha sem nome, e-mail ou WhatsApp válidos. Leads\n// inválidos não são descartados silenciosamente: seguem marcados para\n// notificação (ver node \"Lead válido?\").\nconst lead = $input.first().json;\n\nconst nome = String(lead['Nome completo'] || '').trim();\nconst email = String(lead['E-mail'] || '').trim();\nconst wppDigits = String(lead['WhatsApp'] || '').replace(/\\D/g, '');\n\nconst emailOk = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email);\nconst valid = nome.length >= 3 && emailOk && wppDigits.length >= 10;\n\nreturn [{ json: { ...lead, _descartado: valid ? '' : 'campos_obrigatorios_invalidos' } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        416
+      ],
+      "id": "c1000001-0001-0001-0001-000000000009",
+      "name": "Validar campos obrigatórios"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "b847bb4b-e5e9-4172-81d1-ffa62cb4ce51",
+              "leftValue": "={{ $json._descartado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "94caaa1e-8bcb-4180-9273-c1b818821712",
+      "name": "Lead válido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        224,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/values/banco%20de%20dados!E%3AE",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        272
+      ],
+      "id": "c1000001-0001-0001-0001-000000000003",
+      "name": "Ler banco de dados",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const values = ($input.first().json.values) || [];\n// values[0] é o cabeçalho (\"WhatsApp\"); cada linha seguinte é [\"telefone\"] ou [] se vazia.\nreturn values.slice(1).map((row) => ({ json: { WhatsApp: row[0] || '' } }));\n"
+      },
+      "id": "0bd7838b-79ef-4e5f-9aba-2d8cbd81e1ef",
+      "name": "Reformatar leitura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const dbRows = $input.all();\nconst lead   = $('Parse lead-Tributario').first().json;\n\nconst norm = (v) => {\n  const d = String(v || '').replace(/\\D/g, '');\n  if (!d) return '';\n  const br = (d.startsWith('55') && d.length > 11) ? d.slice(2) : d;\n  return br.slice(0, 11);\n};\n\nconst inDigits = norm(lead._wppDigits || lead['WhatsApp'] || '');\n\nlet isDuplicate = false;\nif (inDigits && inDigits.length >= 8) {\n  isDuplicate = dbRows.some(row => {\n    const wpp = row.json['WhatsApp'] || '';\n    return wpp && norm(wpp) === inDigits;\n  });\n}\n\nconst out = Object.fromEntries(Object.entries(lead).filter(([k]) => k !== '_wppDigits'));\nreturn [{ json: { ...out, _descartado: isDuplicate ? 'duplicata_whatsapp' : '' } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        272
+      ],
+      "id": "c1000001-0001-0001-0001-000000000004",
+      "name": "Filtrar duplicata"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "950f8821-cb96-4fc9-a694-50a943aef533",
+              "leftValue": "={{ $json._descartado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fd06c510-b1fa-436d-90eb-0b398d8661a0",
+      "name": "Lead é duplicata?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nreturn [{ json: {\n  'Data de entrada de leads': d['Data de entrada de leads'],\n  'Hora':                     d.Hora,\n  'Nome completo':            d['Nome completo'],\n  'E-mail':                   d['E-mail'],\n  'WhatsApp':                 d['WhatsApp'],\n  'Confirmar WhatsApp':       d['Confirmar WhatsApp'],\n  'Pergunta Adicional':       d['Pergunta Adicional'],\n  Funil:                      d.Funil,\n  Ingresso:                   d.Ingresso,\n  MQL:                        d.MQL,\n  Channel:                    d.channel,\n  Source:                     d.Source,\n  Medium:                     d.Medium,\n  Campaign:                   d.Campaign,\n  Content:                    d.Content,\n  'Utm Term':                 d['Utm Term'],\n  'Utm Id':                   d['Utm Id'],\n  Fbclid:                     d.Fbclid,\n  Src:                        d.Src,\n  Sck:                        d.Sck,\n  'A Id':                     d['A Id'],\n  Referrer:                   d.Referrer,\n  'Page URL':                 d['Page URL'],\n  Timestamp:                  d.Timestamp\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        224
+      ],
+      "id": "c1000001-0001-0001-0001-000000000005",
+      "name": "Format lead"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/edit",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 255850863,
+          "mode": "list",
+          "cachedResultName": "Pago",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/edit#gid=255850863"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data de entrada de leads",
+              "displayName": "Data de entrada de leads",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hora",
+              "displayName": "Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nome completo",
+              "displayName": "Nome completo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "E-mail",
+              "displayName": "E-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WhatsApp",
+              "displayName": "WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Confirmar WhatsApp",
+              "displayName": "Confirmar WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Pergunta Adicional",
+              "displayName": "Pergunta Adicional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Funil",
+              "displayName": "Funil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MQL",
+              "displayName": "MQL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Channel",
+              "displayName": "Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Medium",
+              "displayName": "Medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Referrer",
+              "displayName": "Referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Page URL",
+              "displayName": "Page URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a73d9da3-2039-444e-8d9a-44d798c99546",
+      "position": [
+        720,
+        240
+      ],
+      "type": "n8n-nodes-base.googleSheets",
+      "name": "Sheets pago",
+      "typeVersion": 4.7,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/edit",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 411493318,
+          "mode": "list",
+          "cachedResultName": "Banco de Dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/edit#gid=411493318"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data de entrada de leads",
+              "displayName": "Data de entrada de leads",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hora",
+              "displayName": "Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome completo",
+              "displayName": "Nome completo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "E-mail",
+              "displayName": "E-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "WhatsApp",
+              "displayName": "WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Confirmar WhatsApp",
+              "displayName": "Confirmar WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pergunta Adicional",
+              "displayName": "Pergunta Adicional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Funil",
+              "displayName": "Funil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MQL",
+              "displayName": "MQL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Channel",
+              "displayName": "Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Medium",
+              "displayName": "Medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Referrer",
+              "displayName": "Referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Page URL",
+              "displayName": "Page URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "0c945c9d-9685-47e7-8556-ce6e8a496db9",
+      "position": [
+        720,
+        560
+      ],
+      "type": "n8n-nodes-base.googleSheets",
+      "name": "Sheets banco de dados",
+      "typeVersion": 4.7,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1870936114,
+          "mode": "list",
+          "cachedResultName": "CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E/edit#gid=1870936114"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1568,
+        400
+      ],
+      "id": "b9cabd16-9e15-4bc0-94fc-a701c16b705c",
+      "name": "Ler CRM",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const crmRows = $input.all();\nconst lead = $('Format lead').first().json;\n\nconst normPhone = (v) => String(v || '').replace(/\\D/g, '').slice(-11);\nconst emailNorm = String(lead['E-mail'] || '').trim().toLowerCase();\nconst phoneNorm = normPhone(lead['WhatsApp']);\n\nlet match = null;\nif (emailNorm) {\n  match = crmRows.find(r => String(r.json['Email'] || '').trim().toLowerCase() === emailNorm);\n}\nif (!match && phoneNorm && phoneNorm.length >= 8) {\n  match = crmRows.find(r => normPhone(r.json['Telefone 1']) === phoneNorm);\n}\n\nif (match) {\n  // Lead já existe no CRM: arquiva o snapshot antigo completo (linha\n  // inteira, como estava) e prepara a atualização in-place (só Funil/Data\n  // de entrada/MQL/Pergunta adicional mudam; o resto do histórico\n  // comercial permanece intocado).\n  const when = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });\n  const existingQ = match.json['Pergunta adicional'] || '';\n  const novaQ = lead['Pergunta Adicional'] || '';\n  const mergedQ = existingQ ? `${existingQ}\\n---\\n[${when}] ${novaQ}` : novaQ;\n\n  return [{ json: {\n    _crmExists: true,\n    _snapshotAntigo: match.json,\n    Email: match.json['Email'],\n    Funil: lead.Funil,\n    'Data de entrada de leads': lead['Data de entrada de leads'],\n    MQL: lead.MQL,\n    'Pergunta adicional': mergedQ,\n  } }];\n}\n\nreturn [{ json: { _crmExists: false, ...lead } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        400
+      ],
+      "id": "6d4f50bb-b6c5-4cd1-9d43-a6a2f873aa29",
+      "name": "Buscar duplicata CRM"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "742cb4cd-46bc-4c0a-9531-420e5de6ea26",
+              "leftValue": "={{ $json._crmExists }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "87067213-a0fe-4647-80bb-ee246e25ee2b",
+      "name": "Já existe no CRM?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nreturn [{ json: d._snapshotAntigo }];\n"
+      },
+      "id": "99497e7e-2974-44cb-b2bb-aaea9caa4490",
+      "name": "Preparar arquivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1247449216,
+          "mode": "list",
+          "cachedResultName": "Archived Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/edit#gid=1247449216"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "628ad0de-01d5-4279-a133-dfe6400ce1a2",
+      "name": "Arquivar CRM antigo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2464,
+        320
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1870936114,
+          "mode": "list",
+          "cachedResultName": "CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E/edit#gid=1870936114"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Buscar duplicata CRM').item.json.Email }}",
+            "Funil": "={{ $('Buscar duplicata CRM').item.json.Funil }}",
+            "Data de entrada de leads": "={{ $('Buscar duplicata CRM').item.json['Data de entrada de leads'] }}",
+            "MQL": "={{ $('Buscar duplicata CRM').item.json.MQL }}",
+            "Pergunta adicional": "={{ $('Buscar duplicata CRM').item.json['Pergunta adicional'] }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Data de entrada de leads",
+              "displayName": "Data de entrada de leads",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data primeira tentativa contato/Primeira resposta",
+              "displayName": "Data primeira tentativa contato/Primeira resposta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data último contato ou tentativa",
+              "displayName": "Data último contato ou tentativa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nomes",
+              "displayName": "Nomes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone 1",
+              "displayName": "Telefone 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone 2",
+              "displayName": "Telefone 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pergunta adicional",
+              "displayName": "Pergunta adicional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pré Venda",
+              "displayName": "Pré Venda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Funil",
+              "displayName": "Funil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Orgânico?",
+              "displayName": "Orgânico?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Respondente?",
+              "displayName": "Respondente?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MQL",
+              "displayName": "MQL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agendado?",
+              "displayName": "Agendado?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data Agendamento",
+              "displayName": "Data Agendamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Closer",
+              "displayName": "Closer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Observações ",
+              "displayName": "Observações ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Por que não agendou?",
+              "displayName": "Por que não agendou?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Próxima interação pré vendas",
+              "displayName": "Próxima interação pré vendas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reunião realizada?",
+              "displayName": "Reunião realizada?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data Reunião ou No-show",
+              "displayName": "Data Reunião ou No-show",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Situação",
+              "displayName": "Situação",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data situação",
+              "displayName": "Data situação",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Por que recusou a proposta?",
+              "displayName": "Por que recusou a proposta?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Produto",
+              "displayName": "Produto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Valor total",
+              "displayName": "Valor total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caixa Coletado",
+              "displayName": "Caixa Coletado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Próxima interação Closer",
+              "displayName": "Próxima interação Closer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_source",
+              "displayName": "utm_source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_medium",
+              "displayName": "utm_medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_campaign",
+              "displayName": "utm_campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_content",
+              "displayName": "utm_content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_term",
+              "displayName": "utm_term",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hora",
+              "displayName": "Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Página",
+              "displayName": "Página",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "campaign_id",
+              "displayName": "campaign_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "adset_id",
+              "displayName": "adset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ad_id",
+              "displayName": "ad_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "JID",
+              "displayName": "JID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "channel",
+              "displayName": "channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Page URL",
+              "displayName": "Page URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "referrer",
+              "displayName": "referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data de entrada do lead",
+              "displayName": "Data de entrada do lead",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Channel",
+              "displayName": "Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Medium",
+              "displayName": "Medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Referrer",
+              "displayName": "Referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone / WhatsApp",
+              "displayName": "Telefone / WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2688,
+        320
+      ],
+      "id": "985c50d6-8351-402d-84cc-d47a6390c92f",
+      "name": "Atualizar CRM",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\n// Identificação de origem orgânica (regra uniforme).\n// Funil pago (lead-*) OU sinal de tráfego pago (fbclid/gclid/utm_medium pago) => 'não'; senão 'sim'.\nconst funil = String(d.Funil || '').trim();\nconst medium = String(d.Medium || '').toLowerCase();\nconst paidMedium = /(cpc|ppc|paid|cpm|display|paid.?social|social.?paid)/.test(medium);\nconst paidSignal = Boolean(d.Fbclid) || Boolean(d.Gclid) || paidMedium;\nconst funilPago = ['Ads','Tributario','Diagnostico','Shopee Ads'].includes(funil);\nconst organico = (funilPago || paidSignal) ? 'não' : 'sim';\nreturn [{ json: {\n  'Data de entrada de leads': d['Data de entrada de leads'],\n  'Nomes':                    d['Nome completo'],\n  'Email':                    d['E-mail'],\n  'Telefone 1':               d['WhatsApp'],\n  'Pergunta adicional':       d['Pergunta Adicional'],\n  'Funil':                    d.Funil,\n  'Orgânico?':                organico,\n  'Channel':                  d.Channel,\n  'Source':                   d.Source,\n  'Medium':                   d.Medium,\n  'Campaign':                 d.Campaign,\n  'Content':                  d.Content,\n  'Referrer':                 d.Referrer,\n  'Page URL':                 d['Page URL'],\n  'Timestamp':                d.Timestamp,\n  'MQL':                      d.MQL\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        512
+      ],
+      "id": "934b5d0e-a5e6-4190-8637-3be7a522816f",
+      "name": "Format CRM"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1870936114,
+          "mode": "list",
+          "cachedResultName": "CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17uXnW7B3OoyGRgnJUtlV59S_JvaxyZe7A9R8PAJ900E/edit#gid=1870936114"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data de entrada de leads",
+              "displayName": "Data de entrada de leads",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data primeira tentativa contato/Primeira resposta",
+              "displayName": "Data primeira tentativa contato/Primeira resposta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data último contato ou tentativa",
+              "displayName": "Data último contato ou tentativa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nomes",
+              "displayName": "Nomes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone 1",
+              "displayName": "Telefone 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone 2",
+              "displayName": "Telefone 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pergunta adicional",
+              "displayName": "Pergunta adicional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pré Venda",
+              "displayName": "Pré Venda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Funil",
+              "displayName": "Funil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Orgânico?",
+              "displayName": "Orgânico?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Respondente?",
+              "displayName": "Respondente?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MQL",
+              "displayName": "MQL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agendado?",
+              "displayName": "Agendado?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data Agendamento",
+              "displayName": "Data Agendamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Closer",
+              "displayName": "Closer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Observações ",
+              "displayName": "Observações ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Por que não agendou?",
+              "displayName": "Por que não agendou?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Próxima interação pré vendas",
+              "displayName": "Próxima interação pré vendas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reunião realizada?",
+              "displayName": "Reunião realizada?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data Reunião ou No-show",
+              "displayName": "Data Reunião ou No-show",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Situação",
+              "displayName": "Situação",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data situação",
+              "displayName": "Data situação",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Por que recusou a proposta?",
+              "displayName": "Por que recusou a proposta?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Produto",
+              "displayName": "Produto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Valor total",
+              "displayName": "Valor total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caixa Coletado",
+              "displayName": "Caixa Coletado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Próxima interação Closer",
+              "displayName": "Próxima interação Closer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_source",
+              "displayName": "utm_source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_medium",
+              "displayName": "utm_medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_campaign",
+              "displayName": "utm_campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_content",
+              "displayName": "utm_content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "utm_term",
+              "displayName": "utm_term",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hora",
+              "displayName": "Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Página",
+              "displayName": "Página",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "campaign_id",
+              "displayName": "campaign_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "adset_id",
+              "displayName": "adset_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ad_id",
+              "displayName": "ad_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "JID",
+              "displayName": "JID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "channel",
+              "displayName": "channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Page URL",
+              "displayName": "Page URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "referrer",
+              "displayName": "referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data de entrada do lead",
+              "displayName": "Data de entrada do lead",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Channel",
+              "displayName": "Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Medium",
+              "displayName": "Medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Referrer",
+              "displayName": "Referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone / WhatsApp",
+              "displayName": "Telefone / WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2464,
+        512
+      ],
+      "id": "290fbf99-4ed5-4b5c-be10-e7b633207227",
+      "name": "Criar lead no CRM",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst motivoCod = d._descartado || 'desconhecido';\nconst MOTIVOS = {\n  campos_obrigatorios_invalidos: 'Campos obrigatórios inválidos',\n  duplicata_whatsapp: 'Lead duplicado (WhatsApp já cadastrado)',\n};\nconst motivo = MOTIVOS[motivoCod] || motivoCod;\nconst funil  = d.Funil || '(sem funil)';\nconst when   = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });\n\nconst nome   = d['Nome completo'] || '';\nconst email  = d['E-mail'] || '';\nconst wpp    = d['WhatsApp'] || '';\nconst perg   = d['Pergunta Adicional'] || '';\nconst origem = [d.Source, d.Medium, d.Campaign].filter(Boolean).join(' / ') || 'Direto / sem UTM';\nconst pagina = d['Page URL'] || '';\n\nconst row = (label, val) => `<tr><td style=\"padding:6px 16px 6px 0;color:#6b7280;white-space:nowrap;vertical-align:top\"><b>${label}</b></td><td style=\"padding:6px 0;color:#111827\">${(val || '—')}</td></tr>`;\nconst html =\n  `<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#111827;max-width:580px\">` +\n  `<p style=\"margin:0 0 4px\">Um lead foi <b>descartado</b> pela automação e registrado na aba <b>Descarte</b> para auditoria.</p>` +\n  `<p style=\"margin:0 0 14px;color:#6b7280\">Funil: <b>${funil}</b> &nbsp;·&nbsp; Motivo: <b>${motivo}</b></p>` +\n  `<table style=\"border-collapse:collapse;font-size:14px\">` +\n  row('Nome', nome) + row('E-mail', email) + row('WhatsApp', wpp) +\n  row('Pergunta adicional', perg) + row('Origem (UTM)', origem) + row('Página', pagina) +\n  row('Quando', when) +\n  `</table></div>`;\nconst subject = `Lead descartado — ${motivo} — ${funil}`;\n\nreturn [{ json: {\n  'Data de entrada de leads': d['Data de entrada de leads'] || '',\n  'Nomes':                    nome,\n  'Email':                    email,\n  'Telefone 1':               wpp,\n  'Pergunta adicional':       perg,\n  'Funil':                    funil,\n  'MQL':                      d.MQL || '',\n  'Channel':                  d.channel || d.Channel || '',\n  'Source':                   d.Source || '',\n  'Medium':                   d.Medium || '',\n  'Campaign':                 d.Campaign || '',\n  'Content':                  d.Content || '',\n  'Referrer':                 d.Referrer || '',\n  'Page URL':                 pagina,\n  'Timestamp':                d.Timestamp || '',\n  subject,\n  html,\n} }];"
+      },
+      "id": "41d559ea-5e23-404f-a332-9feb0c241373",
+      "name": "Formatar registro de descarte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 899834827,
+          "mode": "list",
+          "cachedResultName": "Descarte",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FdV_XZNwPtaEGqyUqErTJ4LJUwlgOn3tul_doV3WKZA/edit#gid=899834827"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data de entrada de leads": "={{ $json['Data de entrada de leads'] }}",
+            "Email": "={{ $json.Email }}",
+            "Telefone 1": "={{ $json['Telefone 1'] }}",
+            "Pergunta adicional": "={{ $json['Pergunta adicional'] }}",
+            "Funil": "={{ $json.Funil }}",
+            "Page URL": "={{ $json['Page URL'] }}",
+            "subject": "={{ $json.subject }}",
+            "Campaign": "={{ $json.Campaign }}",
+            "Medium": "={{ $json.Medium }}",
+            "Channel": "={{ $json.Channel }}",
+            "Source": "={{ $json.Source }}",
+            "Timestamp": "={{ $json.Timestamp }}",
+            "Content": "={{ $json.Content }}",
+            "Referrer": "={{ $json.Referrer }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data de entrada de leads",
+              "displayName": "Data de entrada de leads",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone 1",
+              "displayName": "Telefone 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pergunta adicional",
+              "displayName": "Pergunta adicional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Funil",
+              "displayName": "Funil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Page URL",
+              "displayName": "Page URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Referrer",
+              "displayName": "Referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Medium",
+              "displayName": "Medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Channel",
+              "displayName": "Channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "09c9bb80-0499-4475-8c2c-ea0a166dc46e",
+      "name": "Registrar descarte no Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1600,
+        624
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jFHr4eg26MHLFHHa",
+          "name": "Cockpit"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "timedesenvolvimentop4@gmail.com, taynarasouza.emps@gmail.com",
+        "subject": "={{ $('Formatar registro de descarte').item.json.subject }}",
+        "message": "={{ $('Formatar registro de descarte').item.json.html }}",
+        "options": {}
+      },
+      "id": "5f0d0ba7-62e9-4bb8-821e-8eb9e544325d",
+      "name": "Notificar Descarte",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1792,
+        608
+      ],
+      "webhookId": "a208292f-325e-4d3f-aa25-b17d7c1243f6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "JKFcZbGXB6cczbaB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📋 lead-tributario — Documentação da automação (funil PAGO)\n\n### 1) Objetivo e regra de negócio\nCaptura de leads do funil **Pago** (Tributario). Recebe o lead do formulário da landing page,\nvalida e enriquece no servidor (sem confiar em nada que o navegador possa forjar), evita duplicatas,\ngrava nas planilhas de controle/marketing e alimenta o CRM comercial — **sem perder lead\nsilenciosamente** e **sem perder histórico**. Origem classificada por **funil pareado** (par: LP-Tributario).\n\n### 2) Fluxo de execução\nWebhook → Parse → Validar → «Lead válido?»\n• inválido → Formatar descarte → Registrar descarte (Sheets/Descarte) → Notificar (Gmail)\n• válido → Ler banco (HTTP col E) → Reformatar → Filtrar duplicata → «Duplicata?»\n   • duplicata → (mesmo ramo de descarte)\n   • novo → Format lead → [Sheets Pago + Sheets banco de dados + Ler CRM]\n      Ler CRM → Buscar duplicata CRM → «Já existe no CRM?»\n      • existe → Preparar arquivo → Arquivar CRM antigo → Atualizar CRM (in-place)\n      • novo → Format CRM → Criar lead no CRM\n\n### 3) Responsabilidade de cada nó\n• **Webhook lead-Tributario** — recebe POST (vindo do proxy PHP), valida header `x-p4-webhook-secret`.\n• **Parse** — normaliza telefone `(DD) XXXXX-XXXX`; recalcula MQL e timestamp no servidor; captura\n  tracking completo (utm_source/medium/campaign/content/term/id, fbclid, src, sck, a_id, channel,\n  referrer, page_url); monta Pergunta Adicional; define Funil = `Tributario`.\n• **Validar campos obrigatórios** — marca `_descartado` se nome/e-mail/WhatsApp inválidos.\n• **Lead válido?** — roteia por `_descartado`.\n• **Ler banco de dados** — HTTP Request lê só a coluna E (WhatsApp) da planilha (dedup barato).\n• **Reformatar leitura** — converte a resposta da API em `[{WhatsApp}]`.\n• **Filtrar duplicata** — marca `duplicata_whatsapp` (nunca `return []` silencioso).\n• **Lead é duplicata?** — roteia.\n• **Format lead** — monta o objeto final gravado nas abas (com tracking completo).\n• **Sheets Pago / Sheets banco de dados** — append.\n• **Ler CRM / Buscar duplicata CRM / Já existe no CRM?** — dedup no CRM por e-mail → `Telefone 1`.\n• **Preparar arquivo / Arquivar CRM antigo** — salva o snapshot antigo completo em `Archived Leads`\n  ANTES de qualquer alteração.\n• **Atualizar CRM** — update in-place só de Funil / Data de entrada / MQL / Pergunta adicional\n  (merge aditivo). Expressões usam `$('Buscar duplicata CRM')`.\n• **Format CRM / Criar lead no CRM** — cria novo registro; telefone em `Telefone 1`; **`Orgânico?`**\n  computado (ver §5).\n• **Formatar descarte / Registrar descarte / Notificar Descarte** — auditoria (aba Descarte) +\n  e-mail (assunto/corpo funnel-aware; corpo lido de `$('Formatar registro de descarte')`).\n\n### 4) Integrações externas\n• Google Sheets \"banco de dados\" `1FdV_…doV3WKZA` — abas `Pago`, `banco de dados`,\n  `Archived Leads`, `Descarte` — credencial **Cockpit**.\n• Google Sheets CRM `17uXnW7…900E` — aba `CRM` — credencial **Cockpit**.\n• Gmail — notificação de descarte — credencial **Gmail account** → timedesenvolvimentop4@gmail.com,\n  taynarasouza.emps@gmail.com.\n• Error Workflow **Alerta de Erro - Leads** (`g9jQ4oRB4Z2blFpx`).\n• Landing page envia também a um 2º webhook `p4-consultoria` (outra instância) — preservado.\n\n### 5) Processamento e transformação de dados\n• Telefone → `(DD) XXXXX-XXXX` (11/10 dígitos; remove o 55 do país).\n• MQL **recalculado no servidor** — nunca confia no valor do cliente.\n• Timestamp/Data/Hora sempre do relógio do servidor (America/Sao_Paulo).\n• Pergunta Adicional = Medalha ML + Regime tributário (legendas concatenadas).\n• **Orgânico?** (coluna do CRM, só na criação): `não` se funil pago (lead-*) OU sinal de tráfego\n  pago (fbclid/gclid/utm_medium pago); senão `sim`. Não é sobrescrito em reentradas.\n\n### 6) Lógica de negócio e validações\n• Obrigatórios: nome ≥ 3, e-mail válido, WhatsApp ≥ 10 dígitos.\n• MQL: tem medalha (≠ sem_medalha) E regime ≠ MEI.\n• Funil = `Tributario` → sempre aba `Pago` (classificação por funil pareado; **sem** IF\n  \"É pago?\" interno).\n• Dedup: WhatsApp (planilha, col E) + e-mail → `Telefone 1` (CRM, fallback).\n\n### 7) Tratamento de erro e fallback\n• Exceções reais (Sheets/Gmail fora, credencial expirada) → **Error Workflow** envia e-mail com nó,\n  mensagem e link da execução.\n• Descartes de negócio (inválido/duplicata) **não** são exceções → registrados na aba `Descarte` +\n  e-mail de notificação, em vez de sumir.\n• **Sem retry automático** — falhas dependem do Error Workflow + reenvio manual.\n\n### 8) Decisões de arquitetura\n• **Funis pareados** (este = Pago; par = LP-Tributario) em vez do IF interno da Imersão.\n• Leitura de WhatsApp via **HTTP (col E)** para reduzir o payload ~24×.\n• CRM: **update in-place + arquivamento** (não move o registro para o fim da planilha).\n• `Orgânico?` gravado só na criação (origem de aquisição não muda em reentrada).\n\n### 9) Credenciais, variáveis e configurações\n• Webhook header auth: **P4 Webhook Secret - lead-tributario** (header `x-p4-webhook-secret`; o valor vive no proxy PHP\n  `api/config.php`, nunca no JS público).\n• Google Sheets: **Cockpit** (googleSheetsOAuth2Api). Gmail: **Gmail account** (gmailOAuth2).\n• `errorWorkflow = g9jQ4oRB4Z2blFpx`; `executionOrder = v1`.\n\n### 10) Operação, monitoramento e melhorias\n• Monitorar: execuções com erro (Error Workflow) e o volume da aba `Descarte`.\n• O workflow é editado por API **e** pelo editor visual — sempre reexporte para\n  `leads/lead-tributario/automation/workflow.json` após qualquer mudança (fonte de verdade versionada).\n• Melhorias futuras: otimizar `Ler CRM` (range estreito `CRM!A1:I`), índice real de dedup\n  (ex.: MySQL via o mesmo proxy), retry automático.",
+        "height": 1000,
+        "width": 760,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        60
+      ],
+      "id": "st000001-0001-0001-0001-000000000005",
+      "name": "Documentação da automação"
+    }
+  ],
+  "connections": {
+    "Webhook lead-Tributario": {
+      "main": [
+        [
+          {
+            "node": "Parse lead-Tributario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse lead-Tributario": {
+      "main": [
+        [
+          {
+            "node": "Validar campos obrigatórios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar campos obrigatórios": {
+      "main": [
+        [
+          {
+            "node": "Lead válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead válido?": {
+      "main": [
+        [
+          {
+            "node": "Ler banco de dados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatar registro de descarte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler banco de dados": {
+      "main": [
+        [
+          {
+            "node": "Reformatar leitura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reformatar leitura": {
+      "main": [
+        [
+          {
+            "node": "Filtrar duplicata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar duplicata": {
+      "main": [
+        [
+          {
+            "node": "Lead é duplicata?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead é duplicata?": {
+      "main": [
+        [
+          {
+            "node": "Format lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatar registro de descarte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format lead": {
+      "main": [
+        [
+          {
+            "node": "Sheets banco de dados",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sheets pago",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ler CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler CRM": {
+      "main": [
+        [
+          {
+            "node": "Buscar duplicata CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar duplicata CRM": {
+      "main": [
+        [
+          {
+            "node": "Já existe no CRM?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Já existe no CRM?": {
+      "main": [
+        [
+          {
+            "node": "Preparar arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar arquivo": {
+      "main": [
+        [
+          {
+            "node": "Arquivar CRM antigo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Arquivar CRM antigo": {
+      "main": [
+        [
+          {
+            "node": "Atualizar CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format CRM": {
+      "main": [
+        [
+          {
+            "node": "Criar lead no CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar registro de descarte": {
+      "main": [
+        [
+          {
+            "node": "Registrar descarte no Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar descarte no Sheets": {
+      "main": [
+        [
+          {
+            "node": "Notificar Descarte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "g9jQ4oRB4Z2blFpx"
+  }
+}
