@@ -18,3 +18,9 @@ hostgator_upload_pago.zip
 assets/lp-tributario.png
 .claude/
 *.log
+
+# Segurança e artefatos (padronização P4 2026-07)
+api/config.php
+api/.rate-limit/
+node_modules/
+*.tmp
